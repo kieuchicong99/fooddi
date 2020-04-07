@@ -36,6 +36,14 @@ target 'Starter' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'appcenter-core', :path => '../node_modules/appcenter'
+
+  pod 'appcenter-analytics', :path => '../node_modules/appcenter-analytics'
+
+  pod 'appcenter-crashes', :path => '../node_modules/appcenter-crashes'
+
+  pod 'CodePush', :path => '../node_modules/react-native-code-push'
+
   target 'FooddiTests' do
     inherit! :search_paths
     # Pods for testing

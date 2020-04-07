@@ -17,4 +17,12 @@ const ReactNativeRedux = () => (
     <App />
   </Provider>
 );
-AppRegistry.registerComponent(appName, () => ReactNativeRedux);
+
+import codePush from 'react-native-code-push';
+const codePushOptions = {
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+  installMode: codePush.InstallMode.ON_NEXT_RESUME,
+};
+const StarterApp = codePush(codePushOptions)(ReactNativeRedux);
+
+AppRegistry.registerComponent(appName, () => StarterApp);

@@ -1,5 +1,4 @@
-/* eslint-disable react-native/no-inline-styles */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -15,7 +14,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 });
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default class Login extends Component {
   constructor(props) {
@@ -24,13 +23,13 @@ export default class Login extends Component {
   }
 
   render() {
-    const {navigation} = this.props;
+    const { navigation } = this.props;
     return (
       <KeyboardAwareScrollView contentContainerStyle={styles.container}>
         <View>
           <ImageBackground
             source={background}
-            style={{width: '100%', height: '100%'}}>
+            style={{ width: '100%', height: '100%' }}>
             <View
               style={{
                 padding: 40,
@@ -58,8 +57,8 @@ export default class Login extends Component {
                   navigation.navigate('AfterLogin');
                 }}>
                 <Text
-                  style={{fontSize: 24, textAlign: 'center', color: 'white'}}>
-                  Sign in
+                  style={{ fontSize: 24, textAlign: 'center', color: 'white' }}>
+                  Sign in with new version 14
                 </Text>
               </TouchableOpacity>
             </View>
