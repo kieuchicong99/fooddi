@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
     },
     layout: {
         padding: 10,
+        paddingTop: 0,
         backgroundColor: 'whitesmoke',
         alignItems: 'center',
         justifyContent: 'center',
@@ -38,19 +39,21 @@ class ListFoods extends Component {
         super(props);
         this.state = {}
     }
-    Food = () => {
+    Food = (index, foodImageStyle, textStyle) => {
         return (
-            <View style={styles.layout}>
+            <View style={styles.layout} key={`${index}`}>
                 <ImageBackground
                     source={food}
-                    style={styles.food_img}>
+                    style={foodImageStyle ? foodImageStyle : styles.food_img}>
 
                 </ImageBackground>
                 <View >
-                    <Text style={styles.desp}>
+                    <Text
+                        style={{ ...styles.desp, ...textStyle }}>
                         Bánh mỳ thịt nướng
                     </Text>
-                    <Text style={styles.cost}>
+                    <Text
+                        style={{ ...styles.cost, ...textStyle }} >
                         25.000vnđ
                     </Text>
                 </View>
@@ -58,10 +61,10 @@ class ListFoods extends Component {
             </View>
         );
     }
-    Foods = () => {
+    Foods = (foodImageStyle, textStyle) => {
         return (
-            FoodsData.map(item => {
-                return (this.Food())
+            FoodsData.map((item, index) => {
+                return (this.Food(index, foodImageStyle, textStyle))
             })
         )
     }
@@ -74,7 +77,7 @@ class ListFoods extends Component {
                     maxLength={20}
                 />
                 <ScrollView>
-                    {this.Foods()}
+                    {this.Foods(this.props.foodImageStyle, this.props.textStyle)}
                 </ScrollView>
             </View>
 

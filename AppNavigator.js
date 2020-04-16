@@ -1,26 +1,33 @@
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import Login from './src/screens/login/Login';
-import { View, Text, Button } from 'react-native';
+import {View, Text, Button} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+
 import ListFoods from './src/screens/general/ListFoods';
+import OrderFood from './src/screens/staff/OrderFood';
+import Payment from './src/screens/cashier/Payment';
+import ListTables from './src/screens/general/ListTables';
 
 export const Stack = createStackNavigator();
 const TabMenu = createBottomTabNavigator();
 
 function DetailsScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Text>Details!</Text>
     </View>
   );
 }
 
-function HomeScreen({ navigation }) {
+function HomeScreen({navigation}) {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Text>Home screen</Text>
       <Button
         title="Go to Details"
@@ -30,9 +37,9 @@ function HomeScreen({ navigation }) {
   );
 }
 
-function SettingsScreen({ navigation }) {
+function SettingsScreen({navigation}) {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Text>Settings screen ckc 12334567</Text>
       <Button title="Logout" onPress={() => navigation.navigate('Login')} />
     </View>
@@ -40,6 +47,25 @@ function SettingsScreen({ navigation }) {
 }
 
 const HomeStack = createStackNavigator();
+const PaymentStack = createStackNavigator();
+function PaymentStackScreen() {
+  return (
+    <PaymentStack.Navigator>
+      <PaymentStack.Screen
+        name="ListTables"
+        component={ListTables}
+        options={{
+          headerShown: false,
+        }}></PaymentStack.Screen>
+      <PaymentStack.Screen
+        name="Payment"
+        component={Payment}
+        options={{
+          headerShown: true,
+        }}></PaymentStack.Screen>
+    </PaymentStack.Navigator>
+  );
+}
 
 function HomeStackScreen() {
   return (
@@ -94,7 +120,7 @@ class AfterLogin extends React.Component {
           component={HomeStackScreen}
           options={{
             tabBarLabel: 'Home',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+            tabBarIcon: ({focused, horizontal, tintColor}) => {
               return <Icon name="home" size={30} color="#69c3e0" />;
             },
           }}
@@ -104,8 +130,30 @@ class AfterLogin extends React.Component {
           component={ListFoods}
           options={{
             tabBarLabel: 'Food',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <Icon name="food" size={30} color="#69c3e0" />;
+            tabBarIcon: ({focused, horizontal, tintColor}) => {
+              return (
+                <MaterialCommunityIcons name="food" size={30} color="#69c3e0" />
+              );
+            },
+          }}
+        />
+        <TabMenu.Screen
+          name="OrderFood"
+          component={OrderFood}
+          options={{
+            tabBarLabel: 'OrderFood',
+            tabBarIcon: ({focused, horizontal, tintColor}) => {
+              return <SimpleLineIcons name="note" size={30} color="#69c3e0" />;
+            },
+          }}
+        />
+        <TabMenu.Screen
+          name="Payment"
+          component={PaymentStackScreen}
+          options={{
+            tabBarLabel: 'Payment',
+            tabBarIcon: ({focused, horizontal, tintColor}) => {
+              return <MaterialIcons name="payment" size={30} color="#69c3e0" />;
             },
           }}
         />
@@ -114,7 +162,7 @@ class AfterLogin extends React.Component {
           component={SettingsStackScreen}
           options={{
             tabBarLabel: 'Setting',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+            tabBarIcon: ({focused, horizontal, tintColor}) => {
               return <Icon name="setting" size={30} color="#69c3e0" />;
             },
           }}

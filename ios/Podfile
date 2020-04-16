@@ -44,7 +44,7 @@ target 'Starter' do
 
   pod 'CodePush', :path => '../node_modules/react-native-code-push'
 
-  target 'FooddiTests' do
+  target 'StarterTests' do
     inherit! :search_paths
     # Pods for testing
   end
