@@ -56,6 +56,7 @@ export default class ListTables extends Component {
               padding: 15,
               paddingTop: 4,
               paddingBottom: 4,
+              backgroundColor: '#35b043',
             }}
             onPress={() => props.navigation.navigate('Payment', table)}
             title="Thanh toán"
@@ -74,7 +75,8 @@ export default class ListTables extends Component {
               width: '30%',
               minWidth: 100,
               fontSize: 18,
-            }}>
+            }}
+            >
             {table.name}
           </Text>
           <View style={{ width: '70%', minWidth: 100 }}>

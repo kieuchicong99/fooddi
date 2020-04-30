@@ -13,9 +13,7 @@ const renderContent = (tab) => {
         alignItems: 'flex-start',
         textAlign: 'center',
         justifyContent: 'center',
-        alignItems: 'center',
         margin: 10,
-        backgroundColor: '#ddd',
     };
     const content = tab.map((e, i) => {
         return (
@@ -105,9 +103,10 @@ class OrderFood extends React.Component {
 
         return (
             <View style={{ flex: 3 }}>
-                <Tabs tabs={tabs} style={{ flex: 2 }}>
+                <Tabs tabs={tabs}>
                     <View >
-                        <ListFoods foodImageStyle={{ width: '100%', height: 200 }} textStyle={{ fontSize: 16 }} />
+                        {/* <ListFoods foodImageStyle={{ width: 100, height: 100 }} textStyle={{ fontSize: 16 }} /> */}
+                        <ListFoods />
                     </View>
                     <View>
                         <Text>Content of Second Tab</Text>
