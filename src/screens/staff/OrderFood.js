@@ -48,6 +48,10 @@ class OrderFood extends React.Component {
             { title: 'Lẩu' },
             { title: 'Nướng' },
             { title: 'Cơm' },
+            { title: 'Bún' },
+            { title: 'Phở' },
+            { title: 'Tráng miệng' },
+            { title: 'Đồ uống' },
         ];
         const tabs2 = [
             { title: 'Tầng 1' },
@@ -65,26 +69,26 @@ class OrderFood extends React.Component {
                 title: 'Bàn 1',
                 choosenFoods: [
                     {
-                        title: "bánh mì"
+                        title: 'bánh mì',
                     },
                     {
-                        title: "phở"
+                        title: 'phở',
                     },
                     {
-                        title: "bún"
+                        title: 'bún',
                     },
                     {
-                        title: "cơm gà"
+                        title: 'cơm gà',
                     },
                     {
-                        title: "cơm chiên"
+                        title: 'cơm chiên',
                     },
                     {
-                        title: "cơm nguội"
+                        title: 'cơm nguội',
                     },
 
 
-                ]
+                ],
             },
             { title: 'Bàn 2' },
             { title: 'Bàn 3' },
@@ -103,8 +107,7 @@ class OrderFood extends React.Component {
             <View style={{ flex: 3 }}>
                 <Tabs tabs={tabs} style={{ flex: 2 }}>
                     <View >
-                        <ListFoods foodImageStyle={{ width: '100%', height: 70 }} textStyle={{ fontSize: 16 }}>
-                        </ListFoods>
+                        <ListFoods foodImageStyle={{ width: '100%', height: 200 }} textStyle={{ fontSize: 16 }} />
                     </View>
                     <View>
                         <Text>Content of Second Tab</Text>
@@ -113,16 +116,16 @@ class OrderFood extends React.Component {
                         <Text>Content of Third Tab</Text>
                     </View>
                 </Tabs>
-                <Text style={{ paddingBottom: 12, paddingLeft: 10, fontSize: 24 }}>Đặt món ăn</Text>
+                {/* <Text style={{ paddingBottom: 12, paddingLeft: 10, fontSize: 24 }}>Đặt món ăn</Text>
 
                 <View style={{ flex: 1 }}>
                     <Tabs tabs={tabs2} initialPage={1} tabBarPosition="top">
                         {renderContent(ban)}
                     </Tabs>
-                </View>
+                </View> */}
             </View >
         );
     }
 }
 
-export default OrderFood
+export default OrderFood;
