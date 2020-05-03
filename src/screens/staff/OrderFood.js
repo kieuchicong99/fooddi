@@ -102,9 +102,9 @@ class OrderFood extends React.Component {
 
 
         return (
-            <View style={{ flex: 3 }}>
+            <View style={{ flex: 1 }}>
                 <Tabs tabs={tabs}>
-                    <View >
+                    <View style={{ flex: 1 }}>
                         {/* <ListFoods foodImageStyle={{ width: 100, height: 100 }} textStyle={{ fontSize: 16 }} /> */}
                         <ListFoods />
                     </View>

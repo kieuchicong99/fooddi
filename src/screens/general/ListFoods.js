@@ -7,12 +7,22 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
+import {
+  Modal,
+  Provider,
+} from '@ant-design/react-native';
 import { Button } from 'react-native-elements';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntyIcon from 'react-native-vector-icons/Entypo';
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
-const food = require('../../assets/food.jpg');
+
+import axios from 'axios';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+const baseUrl = 'https://quanlynhahanguet.herokuapp.com/api';
+// let food = require('../../assets/food.jpg');
+let a = ' ';
 const FoodsData = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+
 const styles = StyleSheet.create({
   item: {
     flex: 1,
@@ -52,16 +62,47 @@ const styles = StyleSheet.create({
 class ListFoods extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { a: '', visible2: false, cart: false };
+    this.onClose2 = () => {
+      this.setState({
+        visible2: false,
+      });
+    };
+    this.onCloseCart = () => {
+      this.setState({
+        cart: false,
+      });
+    };
+  }
+  componentDidMount() {
+    axios.get(baseUrl + '/food-group')
+      .then(res => {
+        const List = res.data;
+        // this.setState({ nameList });
+        a = res.data.data[1].foods[1].img;
+        // food = require(a);
+        this.setState({ a: a });
+        console.log('data:', res.data.data[1].foods[1].img);
+      });
   }
   Food = (index, foodImageStyle, textStyle) => {
     return (
       <View style={{ ...styles.item, padding: 10 }} key={`${index}`}>
-        <View style={{ width: '40%' }}>
-          <ImageBackground
-            source={food}
-            style={foodImageStyle ? foodImageStyle : styles.food_img}
-          />
+        <View style={{ width: '40%' }}
+        >
+          <TouchableOpacity onPress={
+            () => {
+              console.log('hello');
+              this.setState({ visible2: true });
+            }
+          }>
+            <ImageBackground
+              source={{ uri: a }}
+              style={foodImageStyle ? foodImageStyle : styles.food_img}
+
+            />
+          </TouchableOpacity>
+
         </View>
 
         <View style={{ width: '60%', height: '100%', ...styles.item }}>
@@ -81,10 +122,33 @@ class ListFoods extends Component {
               buttonStyle={{ width: 30, height: 30, backgroundColor: 'white', borderRadius: 15, padding: 0 }}
               icon={
                 <AntIcon name="pluscircle" size={30} color="#35b043" />
-              } />
+              }
+              onPress={() => { this.setState({ cart: true }); }}
+            />
           </View>
 
         </View>
+
+        <Modal
+          style={{ width: '100%', height: '100%' }}
+          popup
+          visible={this.state.visible2}
+          animationType="slide-up"
+          onClose={this.onCloseCart}
+        >
+          <TouchableOpacity onPress={this.onClose2}>
+            <View style={{ height: '100%', width: '100%' }}>
+              <ImageBackground
+                source={{ uri: a }}
+                style={{ height: '100%', width: '100%', resizeMode: 'cover' }}
+              />
+            </View>
+          </TouchableOpacity>
+
+        </Modal>
+
+
+
       </View >
     );
   };
@@ -93,9 +157,40 @@ class ListFoods extends Component {
       return this.Food(index, foodImageStyle, textStyle);
     });
   };
+  showCart = () => {
+    if (this.state.cart) {
+      return (
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
+
+          <View style={{ ...styles.item }}>
+            <View style={{ width: '20%', float: 'left', height: '100%', backgroundColor: 'white', justifyContent: 'center' }}>
+
+              <Button
+                buttonStyle={
+                  { backgroundColor: 'white' }
+                }
+                icon={
+                  <AntIcon name="shoppingcart" size={30} color="red" />
+                }
+              />
+            </View>
+            <View style={{ width: '46%', height: '100%', justifyContent: 'center' }}>
+              <Text>
+                {'100k'}
+              </Text>
+            </View>
+            <View style={{ width: '33%', height: '100%', justifyContent: 'center' }}>
+              <Button buttonStyle={{ borderRadius: 25, backgroundColor: 'red', padding: 7 }} title="Giao hàng" />
+            </View>
+          </View>
+        </View>
+      );
+    }
+  }
   render() {
     return (
-      <View style={{ height: '100%' }}>
+      <Provider style={{ height: '100%' }}>
+        {/* <View style={{ height: '100%' }}> */}
         <View
           style={
             {
@@ -129,12 +224,17 @@ class ListFoods extends Component {
         </View>
 
         <View style={{ flex: 9 }}  >
-          <ScrollView>
-            {this.Foods(this.props.foodImageStyle, this.props.textStyle)}
-          </ScrollView>
-        </View>
+          <View style={{ flex: 8 }}>
+            <ScrollView>
+              {this.Foods(this.props.foodImageStyle, this.props.textStyle)}
+            </ScrollView>
+          </View>
 
-      </View>
+        </View>
+        {this.showCart()}
+
+        {/* </View> */}
+      </Provider>
     );
   }
 }
