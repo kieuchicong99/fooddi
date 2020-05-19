@@ -18,6 +18,9 @@ import EvilIcon from 'react-native-vector-icons/EvilIcons';
 
 import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import {
+  DragResizeBlock,
+} from 'react-native-drag-resize';
 const baseUrl = 'https://quanlynhahanguet.herokuapp.com/api';
 // let food = require('../../assets/food.jpg');
 let a = ' ';
@@ -160,30 +163,44 @@ class ListFoods extends Component {
   showCart = () => {
     if (this.state.cart) {
       return (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <DragResizeBlock
+          x={0}
+          y={0}
+        >
+          <View
+            style={{
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'red',
+            }}
+          >
+            <View style={{ flex: 1, backgroundColor: 'white' }}>
 
-          <View style={{ ...styles.item }}>
-            <View style={{ width: '20%', float: 'left', height: '100%', backgroundColor: 'white', justifyContent: 'center' }}>
+              <View style={{ ...styles.item }}>
+                <View style={{ width: '20%', float: 'left', height: '100%', backgroundColor: 'white', justifyContent: 'center' }}>
 
-              <Button
-                buttonStyle={
-                  { backgroundColor: 'white' }
-                }
-                icon={
-                  <AntIcon name="shoppingcart" size={30} color="red" />
-                }
-              />
-            </View>
-            <View style={{ width: '46%', height: '100%', justifyContent: 'center' }}>
-              <Text>
-                {'100k'}
-              </Text>
-            </View>
-            <View style={{ width: '33%', height: '100%', justifyContent: 'center' }}>
-              <Button buttonStyle={{ borderRadius: 25, backgroundColor: 'red', padding: 7 }} title="Giao hàng" />
+                  <Button
+                    buttonStyle={
+                      { backgroundColor: 'white' }
+                    }
+                    icon={
+                      <AntIcon name="shoppingcart" size={30} color="red" />
+                    }
+                  />
+                </View>
+                <View style={{ width: '46%', height: '100%', justifyContent: 'center' }}>
+                  <Text>
+                    {'100k'}
+                  </Text>
+                </View>
+                <View style={{ width: '33%', height: '100%', justifyContent: 'center' }}>
+                  <Button buttonStyle={{ borderRadius: 25, backgroundColor: 'red', padding: 7 }} title="Giao hàng" />
+                </View>
+              </View>
             </View>
           </View>
-        </View>
+        </DragResizeBlock>
+
       );
     }
   }

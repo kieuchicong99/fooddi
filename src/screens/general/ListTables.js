@@ -42,10 +42,11 @@ export default class ListTables extends Component {
               padding: 10,
               paddingTop: 3,
               paddingBottom: 3,
+              backgroundColor: '#ffffff'
             }}
             onPress={() => props.navigation.navigate('OrderFood')}
-            title="Đặt món"
-            icon={<SimpleLineIcons name="note" size={15} color="white" style={{ marginRight: 5 }} />}
+            title=""
+            icon={<SimpleLineIcons name="note" size={20} color="#0099ff" style={{ marginRight: 5 }} />}
           />
         </View>
         <View style={{ width: '10%' }} />
@@ -56,11 +57,11 @@ export default class ListTables extends Component {
               padding: 15,
               paddingTop: 4,
               paddingBottom: 4,
-              backgroundColor: '#35b043',
+              backgroundColor: '',
             }}
             onPress={() => props.navigation.navigate('Payment', table)}
-            title="Thanh toán"
-            icon={<MaterialIcons name="payment" size={15} color="white" style={{ marginRight: 5 }} />}
+            title=""
+            icon={<MaterialIcons name="payment" size={25} color="#35b043" style={{ marginRight: 5 }} />}
           />
         </View>
       </View>
@@ -76,7 +77,7 @@ export default class ListTables extends Component {
               minWidth: 100,
               fontSize: 18,
             }}
-            >
+          >
             {table.name}
           </Text>
           <View style={{ width: '70%', minWidth: 100 }}>
