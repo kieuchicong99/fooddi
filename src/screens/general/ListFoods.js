@@ -18,13 +18,10 @@ import EvilIcon from 'react-native-vector-icons/EvilIcons';
 
 import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import {
-  DragResizeBlock,
-} from 'react-native-drag-resize';
+import Item from '@ant-design/react-native/lib/list/ListItem';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
+import { Divider } from 'react-native-elements';
 const baseUrl = 'https://quanlynhahanguet.herokuapp.com/api';
-// let food = require('../../assets/food.jpg');
-let a = ' ';
-const FoodsData = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
 const styles = StyleSheet.create({
   item: {
@@ -41,12 +38,12 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     borderRadius: 25,
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
   },
   layout: {
     padding: 10,
     paddingTop: 0,
-    backgroundColor: 'whitesmoke',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -65,7 +62,7 @@ const styles = StyleSheet.create({
 class ListFoods extends Component {
   constructor(props) {
     super(props);
-    this.state = { a: '', visible2: false, cart: false };
+    this.state = { a: '', visible2: false, cart: false, epandShopingCart: false, choosingFood: [], totalFee: 0 };
     this.onClose2 = () => {
       this.setState({
         visible2: false,
@@ -77,20 +74,37 @@ class ListFoods extends Component {
       });
     };
   }
-  componentDidMount() {
-    axios.get(baseUrl + '/food-group')
-      .then(res => {
-        const List = res.data;
-        // this.setState({ nameList });
-        a = res.data.data[1].foods[1].img;
-        // food = require(a);
-        this.setState({ a: a });
-        console.log('data:', res.data.data[1].foods[1].img);
-      });
+
+  static navigatinOptions = {
+    title: 'hello'
   }
-  Food = (index, foodImageStyle, textStyle) => {
+  componentDidMount() {
+
+  }
+
+  check = (tmp, food) => {
+    if (tmp.length === 0) {
+      return -10;
+    }
+    for (let i = 0; i < tmp.length; i++) {
+      if (tmp[i].id === food.id) {
+        console.log('index:', i)
+        return i;
+      }
+    }
+    return -10;
+  }
+  caculatorFee = () => {
+    let tmp = this.state.choosingFood;
+    let total = 0;
+    tmp.forEach((food, index) => {
+      total += food.num * food.price;
+    })
+    this.setState({ totalFee: total });
+  }
+  Food = (food, foodImageStyle, textStyle) => {
     return (
-      <View style={{ ...styles.item, padding: 10 }} key={`${index}`}>
+      <View style={{ ...styles.item, padding: 10 }} key={`${food.id}`}>
         <View style={{ width: '40%' }}
         >
           <TouchableOpacity onPress={
@@ -100,17 +114,14 @@ class ListFoods extends Component {
             }
           }>
             <ImageBackground
-              source={{ uri: a }}
+              source={{ uri: 'https://cdn3.iconfinder.com/data/icons/bbq-grilling-and-tail-gating/50/48-512.png' }}
               style={foodImageStyle ? foodImageStyle : styles.food_img}
-
             />
           </TouchableOpacity>
-
         </View>
-
         <View style={{ width: '60%', height: '100%', ...styles.item }}>
           <View style={{ width: '80%' }}>
-            <Text style={{ ...styles.desp, ...textStyle }}>Bánh mỳ thịt nướng</Text>
+            <Text style={{ ...styles.desp, ...textStyle }}>{food.name}</Text>
             <View style={{ ...styles.item, maxHeight: 20 }}>
               <EntyIcon name="shopping-bag" size={13} color="#35b043" />
               <Text style={{ fontSize: 13 }}>999+</Text>
@@ -118,20 +129,32 @@ class ListFoods extends Component {
               <EvilIcon name="like" size={22} color="#35b043" />
               <Text style={{ fontSize: 13 }}>20+</Text>
             </View>
-            <Text style={{ ...styles.cost, ...textStyle }}>25.000vnđ</Text>
+            <Text style={{ ...styles.cost, ...textStyle }}>{`${food.price}.000 đ`}</Text>
           </View>
           <View style={{ width: '20%', height: '100%', justifyContent: 'center' }} >
             <Button
-              buttonStyle={{ width: 30, height: 30, backgroundColor: 'white', borderRadius: 15, padding: 0 }}
+              buttonStyle={{ width: 30, height: 30, backgroundColor: '#ffffff', borderRadius: 15, padding: 0 }}
               icon={
                 <AntIcon name="pluscircle" size={30} color="#35b043" />
               }
-              onPress={() => { this.setState({ cart: true }); }}
+              onPress={() => {
+                this.setState({ cart: true });
+                let tmp = this.state.choosingFood;
+                let a = this.check(tmp, food);
+                console.log("a:", a);
+                if (a >= 0) {
+                  tmp[a].num += 1;
+                }
+                if (a === -10) {
+                  tmp.push({ ...food, num: 1 })
+                }
+                this.setState({ choosingFood: [...tmp] })
+                console.log("choosingFood:", this.state.choosingFood);
+                this.caculatorFee();
+              }}
             />
           </View>
-
         </View>
-
         <Modal
           style={{ width: '100%', height: '100%' }}
           popup
@@ -142,72 +165,160 @@ class ListFoods extends Component {
           <TouchableOpacity onPress={this.onClose2}>
             <View style={{ height: '100%', width: '100%' }}>
               <ImageBackground
-                source={{ uri: a }}
+                source={{ uri: 'https://cdn3.iconfinder.com/data/icons/bbq-grilling-and-tail-gating/50/48-512.png' }}
                 style={{ height: '100%', width: '100%', resizeMode: 'cover' }}
               />
             </View>
           </TouchableOpacity>
-
         </Modal>
-
-
-
       </View >
     );
   };
-  Foods = (foodImageStyle, textStyle) => {
-    return FoodsData.map((item, index) => {
-      return this.Food(index, foodImageStyle, textStyle);
+  Foods = (foods, foodImageStyle, textStyle) => {
+    return foods.map((food) => {
+      return this.Food(food, foodImageStyle, textStyle);
     });
   };
   showCart = () => {
     if (this.state.cart) {
       return (
-        <DragResizeBlock
-          x={0}
-          y={0}
+        <View
+          style={{
+            height: this.state.epandShopingCart === true ? 250 : 50,
+            backgroundColor: '#ffffff',
+            // borderWidth: 1,
+            // borderColor: 'red',
+          }}
         >
-          <View
-            style={{
-              width: '100%',
-              height: '100%',
-              backgroundColor: 'red',
-            }}
-          >
-            <View style={{ flex: 1, backgroundColor: 'white' }}>
-
-              <View style={{ ...styles.item }}>
-                <View style={{ width: '20%', float: 'left', height: '100%', backgroundColor: 'white', justifyContent: 'center' }}>
-
-                  <Button
-                    buttonStyle={
-                      { backgroundColor: 'white' }
-                    }
-                    icon={
-                      <AntIcon name="shoppingcart" size={30} color="red" />
-                    }
-                  />
-                </View>
-                <View style={{ width: '46%', height: '100%', justifyContent: 'center' }}>
-                  <Text>
-                    {'100k'}
-                  </Text>
-                </View>
-                <View style={{ width: '33%', height: '100%', justifyContent: 'center' }}>
-                  <Button buttonStyle={{ borderRadius: 25, backgroundColor: 'red', padding: 7 }} title="Giao hàng" />
-                </View>
+          <View style={{
+            backgroundColor: '#ffffff', height: 50,
+            // borderWidth: 1,
+            // borderColor: 'green',
+          }}>
+            <View style={{ ...styles.item, height: '100%' }}>
+              <View style={{ flex: 1, width: '20%', height: '100%', backgroundColor: '#ffffff', justifyContent: 'center' }}>
+                <Button
+                  buttonStyle={
+                    { backgroundColor: '#ffffff' }
+                  }
+                  icon={
+                    <AntIcon name="shoppingcart" size={30} color="red" />
+                  }
+                  onPress={() => { this.setState({ epandShopingCart: !this.state.epandShopingCart }) }}
+                />
+              </View>
+              <View style={{ width: '46%', height: '100%', alignItems: 'flex-start', justifyContent: 'center' }}>
+                <Text style={{ fontSize: 16, color: '#eb150e', padding: 4 }}>
+                  {`${this.state.totalFee}000 đ`}
+                </Text>
+              </View>
+              <View style={{ width: '33%', height: '100%', justifyContent: 'center' }}>
+                <Button buttonStyle={{ borderRadius: 25, backgroundColor: 'red', padding: 7 }} title="Chọn món" />
               </View>
             </View>
           </View>
-        </DragResizeBlock>
+          {
+            this.state.epandShopingCart === true ?
+              (
+                <View style={{
+                  height: 200, backgroundColor: '#ffffff', marginTop: 5,
+                  // borderWidth: 1,
+                  // borderColor: 'blue',
+                }}>
+                  <ScrollView style={{ flex: 1 }}>
+                    {
+                      this.state.choosingFood.map((food, index) => {
+                        return (
+                          <Item>
+                            <View style={{ ...styles.item, flexDirection: 'row', padding: 4, paddingLeft: 10 }}>
+                              <View style={{ width: '30%' }}>
+                                <Text style={{ fontSize: 16 }}>
+                                  {food.name}
+                                </Text>
+                              </View>
+                              <View style={{ width: '20%' }}>
+                                <Text style={{ fontSize: 16 }}>
+                                  {`${food.price}.000đ`}
+                                </Text>
+                              </View>
+                              <View style={{ width: '25%', alignItems: 'center' }}>
+                                <Text style={{ color: '#35b043', fontSize: 18, fontWeight: 'bold' }}>
+                                  {food.num}
+                                </Text>
+                              </View>
+                              <View style={{ width: '10%', alignItems: 'flex-end' }}>
+                                <Button
+                                  buttonStyle={{ width: 20, height: 20, backgroundColor: '#ffffff', borderRadius: 15, padding: 0 }}
+                                  icon={
+                                    <AntIcon name="pluscircle" size={20} color="#35b043" />
+                                  }
+                                  onPress={() => {
+                                    let tmp = this.state.choosingFood;
+                                    tmp[index].num += 1;
+                                    this.setState({ choosingFood: [...tmp] });
+                                    this.caculatorFee();
+                                  }}
+                                />
+                              </View>
 
+                              <View style={{ width: '10%', alignItems: 'center' }}>
+                                <Button
+                                  buttonStyle={{ width: 20, height: 20, backgroundColor: '#ffffff', borderRadius: 15, padding: 0 }}
+                                  icon={
+                                    <AntIcon name="minuscircleo" size={20} color="#35b043" />
+                                  }
+                                  onPress={() => {
+                                    let tmp = this.state.choosingFood;
+                                    if (food.num >= 1) {
+                                      tmp[index].num -= 1;
+                                    }
+                                    if (food.num === 0) {
+                                      tmp.splice(index, 1)
+                                    }
+                                    this.setState({ choosingFood: [...tmp] });
+                                    this.caculatorFee();
+                                  }}
+                                />
+                              </View>
+
+                              <View style={{ width: '10%', alignItems: 'center' }}>
+                                <Button
+                                  buttonStyle={{ width: 20, height: 20, backgroundColor: '#ffffff', borderRadius: 15, padding: 0 }}
+                                  icon={
+                                    <AntIcon name="close" size={20} color="#eb150e" />
+                                  }
+                                  onPress={() => {
+                                    let tmp = this.state.choosingFood;
+                                    let a = this.check(tmp, food)
+                                    if (a >= 0) {
+                                      tmp.splice(a, 1)
+                                      this.setState({ choosingFood: [...tmp] });
+                                      this.caculatorFee();
+                                    }
+                                  }}
+                                />
+                              </View>
+                            </View>
+                          </Item>
+                        )
+                      })
+                    }
+                  </ScrollView>
+                </View>
+              )
+              : null
+          }
+        </View >
       );
     }
   }
   render() {
     return (
-      <Provider style={{ height: '100%' }}>
-        {/* <View style={{ height: '100%' }}> */}
+      <Provider style={{
+        height: '100%',
+        // borderWidth: 1,
+        // borderColor: 'yellow',
+      }}>
         <View
           style={
             {
@@ -240,17 +351,19 @@ class ListFoods extends Component {
 
         </View>
 
-        <View style={{ flex: 9 }}  >
+        <View style={{
+          flex: 9,
+          // borderWidth: 1,
+          // borderColor: 'black',
+        }}  >
           <View style={{ flex: 8 }}>
             <ScrollView>
-              {this.Foods(this.props.foodImageStyle, this.props.textStyle)}
+              {this.Foods(this.props.foods, this.props.foodImageStyle, this.props.textStyle)}
             </ScrollView>
           </View>
 
         </View>
         {this.showCart()}
-
-        {/* </View> */}
       </Provider>
     );
   }

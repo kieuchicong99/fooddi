@@ -58,7 +58,7 @@ export default class Login extends Component {
                 }}>
                 <Text
                   style={{ fontSize: 24, textAlign: 'center', color: 'white' }}>
-                  Sign in with new version 14
+                  Sign in
                 </Text>
               </TouchableOpacity>
             </View>

@@ -5,139 +5,49 @@ import ListFoods from '../general/ListFoods';
 import axios from 'axios';
 const baseUrl = 'https://quanlynhahanguet.herokuapp.com/api';
 
-const renderContent = (tab) => {
-  const banStyle = {
-    minHeight: 100,
-    paddingVertical: 10,
-    backgroundColor: '#ddd',
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    textAlign: 'center',
-    justifyContent: 'center',
-    margin: 10,
-  };
-  const content = tab.map((e, i) => {
-    return (
-      <View key={`${e} ${i}`} style={banStyle}>
-        <Text style={{ width: '50%' }}>
-          {e.title}
-        </Text >
-        <View style={{ width: '50%' }}>
-          {
-            e.choosenFoods?.map((item, index) => {
-              return (
-                <Text key={`${item} ${index}`}>
-                  {item.title}
-                </Text>
-              );
-
-
-            })
-          }
-
-        </View>
-      </View>
-    );
-  });
-  return <ScrollView style={{ backgroundColor: '#fff' }}>{content}</ScrollView>;
-};
 class OrderFood extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      foodGroup: [],
+      groupName: []
+    }
+  }
 
   componentDidMount() {
-    axios.get(baseUrl + '/table-groups')
+    axios.get(baseUrl + '/food-group')
       .then(res => {
         const List = res.data;
-        // this.setState({ nameList });
-        // a = res.data.data[1].foods[1].img;
-        // food = require(a);
-        // this.setState({ a: a });
-        console.log('Tale group:', res);
+        console.log('food group:', res);
+        this.setState({
+          foodGroup: res.data.data
+        })
+        let tmp = []
+        res.data.data.forEach(element => {
+          tmp.push({ title: element.name })
+        });
+        console.log(tmp)
+        this.setState({ groupName: [...tmp] })
       });
+    const { customer } = this.props.route.params;
+    this.props.navigation.setOptions({ title: `KH :  ${customer.full_name}` });
   }
 
   render() {
-    const tabs = [
-      { title: 'Lẩu' },
-      { title: 'Nướng' },
-      { title: 'Cơm' },
-      { title: 'Bún' },
-      { title: 'Phở' },
-      { title: 'Tráng miệng' },
-      { title: 'Đồ uống' },
-    ];
-    const tabs2 = [
-      { title: 'Tầng 1' },
-      { title: 'Tầng 2' },
-      { title: 'Tầng 3' },
-      { title: 'Tầng 4' },
-      { title: 'Tầng 5' },
-      { title: 'Tầng 6' },
-      { title: 'Tầng 7' },
-
-    ];
-
-    const ban = [
-      {
-        title: 'Bàn 1',
-        choosenFoods: [
-          {
-            title: 'bánh mì',
-          },
-          {
-            title: 'phở',
-          },
-          {
-            title: 'bún',
-          },
-          {
-            title: 'cơm gà',
-          },
-          {
-            title: 'cơm chiên',
-          },
-          {
-            title: 'cơm nguội',
-          },
-
-
-        ],
-      },
-      { title: 'Bàn 2' },
-      { title: 'Bàn 3' },
-      { title: 'Bàn 4' },
-      { title: 'Bàn 5' },
-      { title: 'Bàn 6' },
-      { title: 'Bàn 7' },
-      { title: 'Bàn 8' },
-      { title: 'Bàn 9' },
-      { title: 'Bàn 10' },
-
-    ];
-
-
+    const { foodGroup } = this.state;
     return (
       <View style={{ flex: 1 }}>
-        <Tabs tabs={tabs}>
-          <View style={{ flex: 1 }}>
-            {/* <ListFoods foodImageStyle={{ width: 100, height: 100 }} textStyle={{ fontSize: 16 }} /> */}
-            <ListFoods />
-          </View>
-          <View>
-            <Text>Content of Second Tab</Text>
-          </View>
-          <View >
-            <Text>Content of Third Tab</Text>
-          </View>
+        <Tabs tabs={this.state.groupName}>
+          {
+            foodGroup.map(element => {
+              return (
+                <View style={{ flex: 1 }}>
+                  <ListFoods foods={element.foods} />
+                </View>
+              )
+            })
+          }
         </Tabs>
-        {/* <Text style={{ paddingBottom: 12, paddingLeft: 10, fontSize: 24 }}>Đặt món ăn</Text> */}
-
-        {/* <View style={{ flex: 1 }}>
-                    <Tabs tabs={tabs2} initialPage={1} tabBarPosition="top">
-                        {renderContent(ban)}
-                    </Tabs>
-                </View> */}
       </View >
     );
   }
