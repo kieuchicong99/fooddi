@@ -15,7 +15,8 @@ import ChooseTable from './src/screens/staff/ChooseTable';
 import Payment from './src/screens/cashier/Payment';
 import ListTables from './src/screens/general/ListTables';
 import CreateBill from './src/screens/staff/CreateBill';
-
+import Chef from './src/screens/chef/Chef';
+import User from './src/screens/manager/User';
 export const Stack = createStackNavigator();
 const TabMenu = createBottomTabNavigator();
 
@@ -94,6 +95,34 @@ function OrderStackScreen() {
           headerShown: true,
         }}></OrderStack.Screen>
     </OrderStack.Navigator>
+  );
+}
+
+const UserStack = createStackNavigator();
+function UserStackScreen() {
+  return (
+    <UserStack.Navigator>
+      <UserStack.Screen
+        name="User"
+        component={User}
+        options={{
+          headerShown: true,
+        }}></UserStack.Screen>
+    </UserStack.Navigator>
+  );
+}
+
+const ChefStack = createStackNavigator();
+function ChefStackScreen() {
+  return (
+    <ChefStack.Navigator>
+      <ChefStack.Screen
+        name="Chef"
+        component={Chef}
+        options={{
+          headerShown: true,
+        }}></ChefStack.Screen>
+    </ChefStack.Navigator>
   );
 }
 
@@ -197,6 +226,30 @@ class AfterLogin extends React.Component {
             },
           }}
         />
+
+        <TabMenu.Screen
+          name="UserManage"
+          component={UserStackScreen}
+          options={{
+            tabBarLabel: 'UserManage',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="addusergroup" size={30} color="#69c3e0" />;
+            },
+          }}
+        />
+
+        <TabMenu.Screen
+          name="ChefManage"
+          component={ChefStackScreen}
+          options={{
+            tabBarLabel: 'ChefManage',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="carryout" size={30} color="#69c3e0" />;
+            },
+          }}
+        />
+
+
       </TabMenu.Navigator>
     );
   }
