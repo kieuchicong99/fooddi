@@ -6631,13 +6631,6 @@ react-native-collapsible@^1.4.0:
   dependencies:
     prop-types "^15.6.2"
 
-react-native-drag-resize@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/react-native-drag-resize/-/react-native-drag-resize-1.0.2.tgz#69ab3780b65e88ffbfd73665f91f5bbd893be106"
-  integrity sha512-NIqYWPqoaFtfEqN0x5Gn6oCKZUALXVlNmKG9oUtiPL7eOkXE8QjoDSMFoyu0bJbsGr0a7bF58695vnShhFCXJQ==
-  dependencies:
-    prop-types "^15.7.2"
-
 react-native-elements@^1.2.7:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-1.2.7.tgz#1eca2db715c41722aeb67aea62bd2a4621adb134"
@@ -6739,6 +6732,11 @@ react-native-swipeout@^2.3.6:
     create-react-class "^15.6.0"
     prop-types "^15.5.10"
     react-tween-state "^0.1.5"
+
+react-native-table-component@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-table-component/-/react-native-table-component-1.2.1.tgz#5f1e0f159b1dff9df0d5601c4a5ab99d1aa99a25"
+  integrity sha512-sapwO0bONfQtpWg3GVMwP5D3lGEJlxPB3c7fb0soXBynvCa+SBktacVZ9OmYJnIbRJ3uW5pS4tzNc8GmE+UScw==
 
 react-native-vector-icons@^6.6.0:
   version "6.6.0"

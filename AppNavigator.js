@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import Login from './src/screens/login/Login';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +17,8 @@ import ListTables from './src/screens/general/ListTables';
 import CreateBill from './src/screens/staff/CreateBill';
 import Chef from './src/screens/chef/Chef';
 import User from './src/screens/manager/User';
+import Profile from './src/screens/login/Profile'
+import ProfileDetail from './src/screens/login/ProfileDetail'
 export const Stack = createStackNavigator();
 const TabMenu = createBottomTabNavigator();
 
@@ -153,8 +155,8 @@ function SettingsStackScreen() {
   return (
     <SettingsStack.Navigator>
       <SettingsStack.Screen
-        name="Settings"
-        component={SettingsScreen}
+        name="Profile"
+        component={Profile}
         options={{
           headerShown: false,
           headerStyle: {
@@ -163,9 +165,32 @@ function SettingsStackScreen() {
         }}
       />
       <SettingsStack.Screen
-        name="Details"
-        component={DetailsScreen}
-        options={{}}
+        name="ProfileDetail"
+        component={ProfileDetail}
+        options={({ navigation, route }) => ({
+          headerTitle: () => (
+            <Text
+              style={{
+                textAlign: 'center',
+                color: '#363636',
+                fontSize: 24,
+                fontFamily: 'Helvetica Neue',
+                fontWeight: '500',
+                marginLeft: -10,
+              }}>
+              {' '}
+              Thông tin người dùng
+            </Text>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Profile');
+              }}>
+              <Icon name="left" size={20} style={{ marginLeft: 10 }} />
+            </TouchableOpacity>
+          ),
+        })}
       />
     </SettingsStack.Navigator>
   );
