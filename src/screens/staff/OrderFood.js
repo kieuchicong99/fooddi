@@ -10,8 +10,15 @@ class OrderFood extends React.Component {
     super();
     this.state = {
       foodGroup: [],
-      groupName: []
+      groupName: [],
+      billId: ''
     }
+  }
+  onSubmitFood = (value) => {
+    console.log("OrderFood => onSubmitFood:", value)
+    axios.post(baseUrl + '/bill-detail', value).then(res => {
+      console.log("OrderFood => res:", res);
+    })
   }
 
   componentDidMount() {
@@ -29,7 +36,9 @@ class OrderFood extends React.Component {
         console.log(tmp)
         this.setState({ groupName: [...tmp] })
       });
+    console.log('OrderFood: => route.params:', this.props.route.params)
     const { customer } = this.props.route.params;
+    this.setState({ billId: this.props.route.params.bill[0].id })
     this.props.navigation.setOptions({ title: `KH :  ${customer.full_name}` });
   }
 
@@ -42,7 +51,7 @@ class OrderFood extends React.Component {
             foodGroup.map(element => {
               return (
                 <View style={{ flex: 1 }}>
-                  <ListFoods foods={element.foods} />
+                  <ListFoods foods={element.foods} onSubmitFood={this.onSubmitFood} billId={this.state.billId} />
                 </View>
               )
             })

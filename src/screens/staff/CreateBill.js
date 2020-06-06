@@ -78,7 +78,7 @@ export default class CreateBill extends React.Component {
 				</InputItem>
           <Button
             buttonStyle={{
-              borderRadius: 40,
+              borderRadius: 4,
               padding: 15,
               paddingTop: 4,
               paddingBottom: 4,

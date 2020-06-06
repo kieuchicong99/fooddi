@@ -128,7 +128,6 @@ export default class Login extends Component {
                   buttonStyle={{
                     borderRadius: 4,
                     backgroundColor: '#00A651',
-                    textAlign: 'center',
                     padding: 10,
                     marginTop: 10,
                   }}

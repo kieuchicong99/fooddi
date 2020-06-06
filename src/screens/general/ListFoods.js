@@ -213,7 +213,18 @@ class ListFoods extends Component {
                 </Text>
               </View>
               <View style={{ width: '33%', height: '100%', justifyContent: 'center' }}>
-                <Button buttonStyle={{ borderRadius: 25, backgroundColor: 'red', padding: 7 }} title="Chọn món" />
+                <Button buttonStyle={{ borderRadius: 25, backgroundColor: 'red', padding: 7 }} title="Chọn món"
+                  onPress={() => {
+                    console.log('ListFood => choosingFood:', this.state.choosingFood)
+                    console.log('ListFood => props:', this.props)
+                    let tem = []
+                    this.state.choosingFood.forEach(item => {
+                      tem.push({ bill: this.props.billId, food: item.id, amount: item.num })
+                    })
+                    console.log('ListFood => custom choosingFood: ', tem)
+                    this.props.onSubmitFood(tem);
+                  }}
+                />
               </View>
             </View>
           </View>
