@@ -284,7 +284,7 @@ export class AppNavigator extends React.Component {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen
+          {/* <Stack.Screen
             name="Login"
             component={Login}
             options={{
@@ -293,7 +293,7 @@ export class AppNavigator extends React.Component {
                 height: 0,
               },
             }}
-          />
+          /> */}
           <Stack.Screen
             name="AfterLogin"
             component={AfterLogin}

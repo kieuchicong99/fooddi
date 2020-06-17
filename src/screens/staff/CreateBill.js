@@ -20,7 +20,7 @@ export default class CreateBill extends React.Component {
   componentDidMount() {
   }
 
-  createBill(data, props) {
+  createBill = (data, props) => {
     console.log('before CreateBill:', data)
     axios.post(baseUrl + '/customers', data)
       .then(res => {
