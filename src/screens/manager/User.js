@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native'
-// import userAPI from '../../../src/repository/user_repository';
 import { Table, Row, Rows } from 'react-native-table-component';
 import { Button } from 'react-native-elements';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -9,17 +8,13 @@ import {
   Modal,
   Provider,
   Toast
-
 } from '@ant-design/react-native'
-// const { getListUser, delUser, updateUser, createUser } = userAPI
-// import axios from 'axios';
 import WithLoading from '../../component/withLoading';
 import { connect } from 'react-redux';
 import { actions as userActions } from '../../redux/userRedux';
-const { getUsers, updateUser, insertUser } = userActions;
-// const baseUrl = 'http://45.32.23.158:8000/api';
 
-let openModal = false;
+const { getUsers, updateUser, insertUser, deleteUser } = userActions;
+
 class User extends Component {
   constructor(props) {
     super(props);
@@ -31,9 +26,9 @@ class User extends Component {
           <AntIcon name="delete" size={20} color="red" />
         }
         onPress={() => {
-          delUser(element.id).then(res => {
+          this.props.deleteUser(element.id).then(res => {
             Toast.success('Success!', 0.5, () => {
-              this.getUsers();
+              this.loadUser();
             });
           }, err => {
             Toast.fail('Error:' + err1, 0.5);
@@ -50,7 +45,6 @@ class User extends Component {
         onPress={() => {
           this.setState(
             {
-              isFetching: true,
               openModal: true,
               titleModal: 'Cập nhật tài khoản',
               username: element.username,
@@ -106,17 +100,11 @@ class User extends Component {
     let payload = { username, full_name, office, password }
     if (this.state.titleModal === 'Cập nhật tài khoản') {
       console.log('onSubmit => id, payload:', id, payload);
-      // this.props.updateUser(id, payload, undefined)
       this.props.updateUser(id, payload, undefined).then(res => {
         console.log('res of upDateUser => data:', res);
         this.setState({ id: '', username: '', full_name: '', office: '', password: '' })
         Toast.success('Success!', 0.5, () => {
-          this.props.getUsers().then(
-            res => {
-              this.formatForRender()
-            }
-          );
-
+          this.loadUser();
         });
       },
         err1 => {
@@ -124,19 +112,25 @@ class User extends Component {
         }
       );
     }
-    this.props.insertUser(payload).then(res => {
-      console.log('res of upDateUser => data:', res);
-      this.setState({ id: '', username: '', full_name: '', office: '', password: '' })
-      Toast.success('Success!', 0.5, () => {
-        this.props.getUsers().then(
-          res => {
-            this.formatForRender()
-          }
-        );
-      });
-    },
-      err1 => {
-        Toast.fail('Error:' + err1, 0.5);
+    else {
+      this.props.insertUser(payload).then(res => {
+        console.log('res of insertUser => data:', res);
+        this.setState({ id: '', username: '', full_name: '', office: '', password: '' })
+        Toast.success('Success!', 0.5, () => {
+          this.loadUser();
+        });
+      },
+        err1 => {
+          Toast.fail('Error:' + err1, 0.5);
+        }
+      );
+    }
+  }
+
+  loadUser = () => {
+    this.props.getUsers().then(
+      res => {
+        this.formatForRender()
       }
     );
   }
@@ -189,7 +183,7 @@ class User extends Component {
           </Table>
         </ScrollView>
         <Modal
-          style={{ width: '85%', height: '60%', marginTop: -50, minHeight: 300 }}
+          style={{ width: '85%', height: '55%', marginTop: -50, minHeight: 310 }}
           title={<Text style={{ textAlign: 'center', fontSize: 18 }}>{this.state.titleModal}</Text>}
           transparent
           onClose={
@@ -206,12 +200,7 @@ class User extends Component {
           <ScrollView style={{ marginTop: 10 }}>
             <View
               style={{
-                flexDirection: 'row',
-                borderColor: '#D2D2D2',
-                backgroundColor: '#F6F6F8',
-                borderWidth: 1,
-                borderRadius: 4,
-                marginBottom: 10
+                ...styles.rowInput
               }}>
               <View
                 style={{
@@ -221,13 +210,11 @@ class User extends Component {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                {/* <FontAwesome name="user" size={25} /> */}
                 <Text>Chức vụ</Text>
               </View>
               <View style={{ width: '70%' }}>
                 <RNPickerSelect
                   onValueChange={(value) => { this.setState({ office: value }) }}
-                  // value={this.state.office}
                   placeholder={{ label: this.state.office_name !== '' ? this.state.office_name : 'Chọn chức vụ' }}
                   items={[
                     { label: 'Quản lý', value: 1 },
@@ -240,12 +227,7 @@ class User extends Component {
             </View>
             <View
               style={{
-                flexDirection: 'row',
-                borderColor: '#D2D2D2',
-                backgroundColor: '#F6F6F8',
-                borderWidth: 1,
-                borderRadius: 4,
-                marginBottom: 10
+                ...styles.rowInput
               }}>
               <View
                 style={{
@@ -255,7 +237,6 @@ class User extends Component {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                {/* <FontAwesome name="user" size={25} /> */}
                 <Text>Tài khoản</Text>
               </View>
               <View style={{ width: '70%' }}>
@@ -263,13 +244,7 @@ class User extends Component {
                   placeholder="username"
                   placeholderTextColor="#363636"
                   style={{
-                    backgroundColor: '#F6F6F8',
-                    fontFamily: 'Helvetica Neue',
-                    textAlign: 'left',
-                    fontSize: 16,
-                    paddingLeft: 15,
-                    height: 40,
-                    color: '#363636',
+                    ...styles.input
                   }}
                   value={this.state.username}
                   onChangeText={value => {
@@ -282,12 +257,7 @@ class User extends Component {
             </View>
             <View
               style={{
-                flexDirection: 'row',
-                borderColor: '#D2D2D2',
-                backgroundColor: '#F6F6F8',
-                borderWidth: 1,
-                borderRadius: 4,
-                marginBottom: 10
+                ...styles.rowInput
               }}>
               <View
                 style={{
@@ -297,7 +267,6 @@ class User extends Component {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                {/* <FontAwesome name="user" size={25} /> */}
                 <Text>Mật khẩu</Text>
               </View>
               <View style={{ width: '70%' }}>
@@ -305,13 +274,7 @@ class User extends Component {
                   placeholder="password"
                   placeholderTextColor="#363636"
                   style={{
-                    backgroundColor: '#F6F6F8',
-                    fontFamily: 'Helvetica Neue',
-                    textAlign: 'left',
-                    fontSize: 16,
-                    paddingLeft: 15,
-                    height: 40,
-                    color: '#363636',
+                    ...styles.input
                   }}
                   value={this.state.password}
                   onChangeText={value => {
@@ -324,12 +287,7 @@ class User extends Component {
             </View>
             <View
               style={{
-                flexDirection: 'row',
-                borderColor: '#D2D2D2',
-                backgroundColor: '#F6F6F8',
-                borderWidth: 1,
-                borderRadius: 4,
-                marginBottom: 10
+                ...styles.rowInput
               }}>
               <View
                 style={{
@@ -339,7 +297,6 @@ class User extends Component {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                {/* <FontAwesome name="user" size={25} /> */}
                 <Text>Tên</Text>
               </View>
               <View style={{ width: '70%' }}>
@@ -347,13 +304,7 @@ class User extends Component {
                   placeholder="full_name"
                   placeholderTextColor="#363636"
                   style={{
-                    backgroundColor: '#F6F6F8',
-                    fontFamily: 'Helvetica Neue',
-                    textAlign: 'left',
-                    fontSize: 16,
-                    paddingLeft: 15,
-                    height: 40,
-                    color: '#363636',
+                    ...styles.input
                   }}
                   value={this.state.full_name}
                   onChangeText={value => {
@@ -388,29 +339,39 @@ class User extends Component {
                     <AntIcon name="save" size={20} color="#2089DC" />
                   }
                   onPress={() => {
-
                     this.onSubmit()
                     this.setState({ openModal: false })
                   }}
                 />
               </View>
             </View>
-
-
           </ScrollView>
-
-
         </Modal>
       </Provider >
-
-
     );
   }
 }
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
   head: { height: 40, backgroundColor: '#f1f8ff' },
-  text: { margin: 6 }
+  text: { margin: 6 },
+  input: {
+    backgroundColor: '#F6F6F8',
+    fontFamily: 'Helvetica Neue',
+    textAlign: 'left',
+    fontSize: 16,
+    paddingLeft: 15,
+    height: 40,
+    color: '#363636',
+  },
+  rowInput: {
+    flexDirection: 'row',
+    borderColor: '#D2D2D2',
+    backgroundColor: '#F6F6F8',
+    borderWidth: 1,
+    borderRadius: 4,
+    marginBottom: 10
+  },
 });
 
 const mapStateToProps = (state) => {
@@ -425,6 +386,7 @@ const mapDispatchToProps = (dispatch) => ({
   getUsers: () => dispatch(getUsers()),
   updateUser: (userId, payload, meta) => dispatch(updateUser(userId, payload, meta)),
   insertUser: (payload, meta) => dispatch(insertUser(payload, meta)),
+  deleteUser: (userId, meta) => dispatch(deleteUser(userId, meta)),
 });
 
 export default connect(

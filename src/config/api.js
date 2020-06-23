@@ -30,7 +30,7 @@ export const API_URLS = {
     insertUser: (payload) => ({
       endPoint: '/api/users',
       method: 'POST',
-      headers: HEADERS.header(),
+      headers: HEADERS.jsonHeader(),
       name: 'ADD_USER',
       payload,
     }),

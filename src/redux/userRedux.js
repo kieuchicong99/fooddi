@@ -105,7 +105,7 @@ export const actions = {
   deleteUser: (userId, meta) => async (dispatch) => {
     const api = API_URLS.USER.deleteUser(userId);
     dispatch(actions.deletingUser());
-    const { response, error } = await apiCall({ ...api });
+    const { response, error } = await apiCall(api);
     if (!error && response.status === 200) {
       dispatch(actions.deleteUserSuccess(response.data));
       if (meta && meta.onSuccess) {
@@ -121,8 +121,10 @@ export const actions = {
 
   // insertUser
   insertUser: (payload, meta) => async () => {
+    console.log('userRedux => insertUser => payload:', payload)
     const api = API_URLS.USER.insertUser(payload);
     const { response, error } = await apiCall(api);
+    console.log('userRedux => insertUser => response:', response)
     if (!error && (response.status === 200 || response.status === 201)) {
       if (meta && meta.onSuccess) {
         meta.onSuccess();
