@@ -108,7 +108,7 @@ function UserStackScreen() {
         name="User"
         component={User}
         options={{
-          headerShown: true,
+          headerShown: false,
         }}></UserStack.Screen>
     </UserStack.Navigator>
   );

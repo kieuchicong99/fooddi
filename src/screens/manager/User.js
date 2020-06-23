@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native'
-import userAPI from '../../../src/repository/user_repository';
-import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+// import userAPI from '../../../src/repository/user_repository';
+import { Table, Row, Rows } from 'react-native-table-component';
 import { Button } from 'react-native-elements';
 import AntIcon from 'react-native-vector-icons/AntDesign';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import RNPickerSelect from 'react-native-picker-select';
 import {
   Modal,
@@ -12,12 +11,16 @@ import {
   Toast
 
 } from '@ant-design/react-native'
-const { getListUser, delUser, updateUser, createUser } = userAPI
-import axios from 'axios';
-const baseUrl = 'http://45.32.23.158:8000/api';
+// const { getListUser, delUser, updateUser, createUser } = userAPI
+// import axios from 'axios';
+import WithLoading from '../../component/withLoading';
+import { connect } from 'react-redux';
+import { actions as userActions } from '../../redux/userRedux';
+const { getUsers, updateUser, insertUser } = userActions;
+// const baseUrl = 'http://45.32.23.158:8000/api';
 
 let openModal = false;
-export default class User extends Component {
+class User extends Component {
   constructor(props) {
     super(props);
 
@@ -47,6 +50,7 @@ export default class User extends Component {
         onPress={() => {
           this.setState(
             {
+              isFetching: true,
               openModal: true,
               titleModal: 'Cập nhật tài khoản',
               username: element.username,
@@ -78,7 +82,7 @@ export default class User extends Component {
     );
 
     this.state = {
-      tableHead: ['Chức vụ', 'Tài khoản', "Tên", "Hành động"],
+      tableHead: ['Tên TK', 'Tên NV', "Tên CV", "Hành động"],
       tableData: [
         ['1', '2', '3', this.del_edit()],
         ['a', 'b', 'c', this.del_edit()],
@@ -102,11 +106,17 @@ export default class User extends Component {
     let payload = { username, full_name, office, password }
     if (this.state.titleModal === 'Cập nhật tài khoản') {
       console.log('onSubmit => id, payload:', id, payload);
-      updateUser(id, payload).then(res => {
+      // this.props.updateUser(id, payload, undefined)
+      this.props.updateUser(id, payload, undefined).then(res => {
         console.log('res of upDateUser => data:', res);
         this.setState({ id: '', username: '', full_name: '', office: '', password: '' })
         Toast.success('Success!', 0.5, () => {
-          this.getUsers();
+          this.props.getUsers().then(
+            res => {
+              this.formatForRender()
+            }
+          );
+
         });
       },
         err1 => {
@@ -114,66 +124,66 @@ export default class User extends Component {
         }
       );
     }
-    createUser(payload).then(res => {
+    this.props.insertUser(payload).then(res => {
       console.log('res of upDateUser => data:', res);
       this.setState({ id: '', username: '', full_name: '', office: '', password: '' })
       Toast.success('Success!', 0.5, () => {
-        this.getUsers();
+        this.props.getUsers().then(
+          res => {
+            this.formatForRender()
+          }
+        );
       });
     },
       err1 => {
         Toast.fail('Error:' + err1, 0.5);
       }
     );
-
-
   }
 
-  getUsers = () => {
-    getListUser().then(res => {
-      console.log("res:", res.data.data)
-      const data = res.data.data;
-      const tem = [];
-      data.forEach(element => {
-        let tem_el = [element.username, element.full_name, element.office_name, this.del_edit(element)];
-        tem.push(tem_el)
-      });
-      console.log('format:', tem)
-      this.setState({
-        tableData: [...tem]
-      })
+  formatForRender = () => {
+    const tem = [];
+    this.props.users.forEach(element => {
+      let tem_el = [element.username, element.full_name, element.office_name, this.del_edit(element)];
+      tem.push(tem_el)
     });
+    console.log('format:', tem)
+    this.setState({
+      tableData: [...tem]
+    })
   }
 
-  componentDidMount() {
-    this.getUsers();
+  async componentDidMount() {
+    await this.props.getUsers();
+    this.formatForRender()
   };
 
+
   render() {
-    console.log('open Modal: ', openModal)
+    console.log('state: ', this.state)
     return (
       <Provider>
-        <ScrollView style={{ ...styles.container, paddingTop: 10 }}>
-          <View style={{ flexDirection: 'row' }}>
-            <View style={{ fontSize: 18, width: '60%' }}>
-              <Text style={{ fontSize: 18, textTransform: 'uppercase' }}>Danh sách người dùng</Text>
-            </View>
-            <View style={{ width: '40%', alignItems: 'flex-end' }}>
-              <Button
-                buttonStyle={{ width: 120, height: 30, borderRadius: 15, padding: 15, paddingTop: 10, paddingBottom: 10, marginBottom: 15 }}
-                title='Thêm'
-                icon={
-                  <AntIcon name="plus" size={20} color="#FFFFFF" />
-                }
-                onPress={() => {
-                  this.setState({ openModal: true, titleModal: 'Tạo tài khoản' })
-                }}
-              />
-            </View>
+
+        <View style={{ flexDirection: 'row', padding: 10 }}>
+          <View style={{ fontSize: 18, width: '60%' }}>
+            <Text style={{ fontSize: 18, textTransform: 'uppercase' }}>Danh sách người dùng</Text>
           </View>
+          <View style={{ width: '40%', alignItems: 'flex-end' }}>
+            <Button
+              buttonStyle={{ width: 120, height: 30, borderRadius: 15, padding: 15, paddingTop: 10, paddingBottom: 10, marginBottom: 15 }}
+              title='Thêm'
+              icon={
+                <AntIcon name="plus" size={20} color="#FFFFFF" />
+              }
+              onPress={() => {
+                this.setState({ openModal: true, titleModal: 'Tạo tài khoản' })
+              }}
+            />
+          </View>
+        </View>
 
-
-          <Table borderStyle={{ borderWidth: 2, borderColor: '#c8e1ff' }}>
+        <ScrollView style={{ ...styles.container, paddingTop: 10 }}>
+          <Table borderStyle={{ borderWidth: 2, borderColor: '#c8e1ff' }} style={{ marginBottom: 40 }}>
             <Row data={this.state.tableHead} style={styles.head} textStyle={styles.text} />
             <Rows data={this.state.tableData} textStyle={styles.text} />
           </Table>
@@ -402,3 +412,22 @@ const styles = StyleSheet.create({
   head: { height: 40, backgroundColor: '#f1f8ff' },
   text: { margin: 6 }
 });
+
+const mapStateToProps = (state) => {
+  const { userReducer } = state;
+  return {
+    users: userReducer.items,
+    isFetching: userReducer.isFetching,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  getUsers: () => dispatch(getUsers()),
+  updateUser: (userId, payload, meta) => dispatch(updateUser(userId, payload, meta)),
+  insertUser: (payload, meta) => dispatch(insertUser(payload, meta)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)((WithLoading(User)));

@@ -3,7 +3,7 @@
 import Reactotron from 'reactotron-react-native';
 import { reactotronRedux as reduxPlugin } from 'reactotron-redux';
 
-Reactotron.configure({ name: 'UbofoodPOS' });
+Reactotron.configure({ name: 'Stater' });
 
 Reactotron.useReactNative({
   asyncStorage: { ignore: ['secret'] },
