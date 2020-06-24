@@ -19,6 +19,8 @@ import Chef from './src/screens/chef/Chef';
 import User from './src/screens/manager/User';
 import Profile from './src/screens/login/Profile'
 import ProfileDetail from './src/screens/login/ProfileDetail'
+import Delivery from './src/screens/staff/Delivery';
+import ListPayment from './src/screens/cashier/ListPayment';
 export const Stack = createStackNavigator();
 const TabMenu = createBottomTabNavigator();
 
@@ -118,9 +120,21 @@ const ChefStack = createStackNavigator();
 function ChefStackScreen() {
   return (
     <ChefStack.Navigator>
-      <ChefStack.Screen
+      {/* <ChefStack.Screen
         name="Chef"
         component={Chef}
+        options={{
+          headerShown: true,
+        }}></ChefStack.Screen> */}
+      {/* <ChefStack.Screen
+        name="Delivery"
+        component={Delivery}
+        options={{
+          headerShown: true,
+        }}></ChefStack.Screen> */}
+      <ChefStack.Screen
+        name="Delivery"
+        component={ListPayment}
         options={{
           headerShown: true,
         }}></ChefStack.Screen>

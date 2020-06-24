@@ -25,16 +25,21 @@ class Chef extends Component {
       epandShopingCart: false,
       choosingFood: [],
       food__name: '',
+      food_id: '',
       numTodo: 0,
       totalFee: 0,
-      numMade: 0
+      numMade: 0,
+      submitStatus: false,
+      client: new WebSocket('ws://45.32.23.158:8000/ws/chat/chef/')
     };
+
     this.onClose = () => {
       this.setState({
         openModal: false,
         listFood: [],
 
       });
+
     };
 
     this.onCloseCart = () => {
@@ -42,18 +47,8 @@ class Chef extends Component {
         cart: false,
       });
     };
-  }
 
-  static navigatinOptions = {
-    title: 'hello'
-  }
-
-  componentDidMount() {
-    const client = new WebSocket('ws://45.32.23.158:8000/ws/chat/chef/');
-    client.onopen = () => {
-      console.log('WebSocket Client Connected');
-    };
-    client.onmessage = (message) => {
+    this.state.client.onmessage = (message) => {
       console.log('onmessage');
       let data = JSON.parse(message.data)
       let listFood = [...data.message];
@@ -65,7 +60,16 @@ class Chef extends Component {
       console.log('listFood:', listFood)
       this.setState({ listFood: listFood })
       console.log('this.state  =>:', this.state.listFood);
+
     };
+
+  }
+
+  static navigatinOptions = {
+    title: 'hello'
+  }
+
+  componentDidMount() {
 
   }
 
@@ -131,10 +135,12 @@ class Chef extends Component {
                               <AntIcon name="bells" size={20} color="#35b043" />
                             }
                             onPress={() => {
+                              console.log('item:', item);
                               this.onSubmit()
                               this.setState({
                                 food__name: item.food__name,
-                                numTodo: item.count - item.count_complete
+                                numTodo: item.count - item.count_complete,
+                                food_id: item.food
                               })
 
                             }}
@@ -182,7 +188,18 @@ class Chef extends Component {
             />
             <Text style={{ fontSize: 16, fontWeight: '500', marginTop: 10 }}>Đã làm: {this.state.numMade}</Text>
             <View style={{ marginTop: 30 }}>
-              <ButtonCustom type='first' title='Xác nhận' buttonStyle={{ minHeight: 35 }}>
+              <ButtonCustom type='first' title='Xác nhận' buttonStyle={{ minHeight: 35 }}
+                onPress={() => {
+                  let payload = {
+                    data: {
+                      food: this.state.food_id,
+                      amount: this.state.numMade
+                    }
+                  }
+
+                  this.state.client.send(JSON.stringify(payload))
+                }}
+              >
               </ButtonCustom>
             </View>
           </View>

@@ -25,7 +25,7 @@ class OrderFood extends React.Component {
         Toast.success('Đặt món thành công!', 0.5, () => {
           // props.navigation.navigate('OrderFood', { customer: this.state.customer, bill: res.response.data.bill })
         });
-      }
+      } 123
     })
   }
 

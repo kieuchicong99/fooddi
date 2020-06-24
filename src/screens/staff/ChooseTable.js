@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, StatusBar, ImageBackground } from 'react-native';
 import { Button } from 'react-native-elements';
 import { List, Provider, Toast, Radio } from '@ant-design/react-native';
 import { connect } from 'react-redux';
 import WithLoading from '../../component/withLoading';
 import { actions as billActions } from '../../redux/billRedux';
-
-const { createBill } = billActions;
+import ParallaxScrollView from 'react-native-parallax-scroll-view';
+import headerCategory from '../../component/headerCategory';
+const { createBill, getTables } = billActions;
 
 const RadioItem = Radio.RadioItem;
 const Item = List.Item;
@@ -16,6 +17,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
+  image: {
+    resizeMode: 'cover',
+    width: '100%',
+    height: 140,
+    borderRadius: 4,
+  }
 });
 
 class ChooseTable extends Component {
@@ -25,7 +32,8 @@ class ChooseTable extends Component {
       ListTables: [
       ],
       customer: {},
-      chooseTable: ''
+      chooseTable: '',
+      statusBar: false
     };
   }
 
@@ -33,8 +41,7 @@ class ChooseTable extends Component {
     console.log('prams:', this.props.route.params)
     this.setState({ ListTables: this.props.route.params.listTables })
     this.setState({ customer: this.props.route.params.customer })
-    const { customer } = this.props.route.params;
-    this.props.navigation.setOptions({ title: `KH : ${customer.full_name}` });
+    this.props.navigation.setOptions({ headerShown: false });
   }
 
   addTable(table) {
@@ -63,7 +70,7 @@ class ChooseTable extends Component {
 
   renderTable = (table, index) => {
     return (
-      <RadioItem key={`${index}`} style={{ ...styles.item, alignItems: 'center', backgroundColor: this.state.chooseTable === table.id ? '#aaafb5' : '#ffffff', fontSize: 18, marginLeft: 15 }}
+      <RadioItem key={`${index}`} style={{ ...styles.item, alignItems: 'center', backgroundColor: this.state.chooseTable === table.id ? '#aaafb5' : '#ffffff', fontSize: 18 }}
         checked={this.state.chooseTable === table.id}
         onChange={event => {
           if (event.target.checked) {
@@ -78,51 +85,85 @@ class ChooseTable extends Component {
   render() {
     return (
       <Provider>
-        <View style={{ flex: 1 }}>
-          <Text style={
-            {
-              fontSize: 20,
-              margin: 5,
-              textAlign: 'center'
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+        {this.state.statusBar
+          ? headerCategory('showInBackgroundImage', this.props)
+          : headerCategory('showInBackgroundColor', this.props)}
+        <ParallaxScrollView
+          backgroundColor="white"
+          contentBackgroundColor="white"
+          parallaxHeaderHeight={140}
+          onChangeHeaderVisibility={(event) => {
+            console.log('event:', event);
+            // eslint-disable-next-line no-unused-expressions
+            if (event === true) {
+              StatusBar.setBarStyle('light-content');
+              this.setState({ statusBar: true });
+
+            } else {
+              StatusBar.setBarStyle('dark-content');
+              this.setState({ statusBar: false });
             }
-          }>
-            Chọn bàn ăn
-                </Text>
-          <ScrollView
-            style={{ backgroundColor: '#f5f5f9' }}
-            automaticallyAdjustContentInsets={false}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}>
-            <List >
-              {
-                this.state.ListTables.map((table, i) => this.renderTable(table, i))
-              }
-            </List>
-          </ScrollView>
-          <View style={{
-            alignItems: 'center', paddingVertical: 10
-          }}>
-            {this.state.chooseTable !== '' ? (<Button
-              buttonStyle={{
-                borderRadius: 40,
-                padding: 10,
-                backgroundColor: '#4682c2',
-                height: 40,
-                minWidth: 120
-              }}
-              onPress={() =>
-                this.createBill(this.props)
-              }
-              titleStyle={{
-                color: "#ffffff",
-                textAlign: 'center'
-              }}
-              title="Hoàn Thành"
-            />) : null}
+            if (this.state.statusBar === true) {
+              this.props.getTables();
+            }
+          }}
+          stickyHeaderHeight={90}
+          renderForeground={() => (
+            <>
+              <View>
+                <ImageBackground
+                  source={{
+                    uri:
+                      'https://cf.shopee.vn/file/86542db17b76c659f9a2a3f96cb36fde',
+                  }}
+                  style={{ ...styles.image }}
+                />
+              </View>
+            </>
+          )}>
+          <View style={{ marginVetical: 20 }}>
+            <View style={{ flex: 1 }}>
+              <View
+                style={{ backgroundColor: '#f5f5f9' }}
+              >
+                <List >
+                  {
+                    this.state.ListTables.map((table, i) => this.renderTable(table, i))
+                  }
+                </List>
+              </View>
+
+              <View />
+            </View>
           </View>
-          <View />
+        </ParallaxScrollView>
+        <View style={{
+          alignItems: 'center', paddingVertical: 10
+        }}>
+          {this.state.chooseTable !== '' ? (<Button
+            buttonStyle={{
+              borderRadius: 40,
+              padding: 10,
+              backgroundColor: '#4682c2',
+              height: 40,
+              minWidth: 120
+            }}
+            onPress={() =>
+              this.createBill(this.props)
+            }
+            titleStyle={{
+              color: "#ffffff",
+              textAlign: 'center'
+            }}
+            title="Hoàn Thành"
+          />) : null}
         </View>
-      </Provider>
+      </Provider >
     );
   }
 }
@@ -135,6 +176,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   createBill: (payload, meta) => dispatch(createBill(payload, meta)),
+  getTables: () => dispatch(getTables())
 });
 
 export default connect(
