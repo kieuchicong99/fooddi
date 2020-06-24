@@ -1,9 +1,12 @@
 import React from 'react';
-import { ScrollView, Text, View, TouchableOpacity } from 'react-native';
-import { Tabs } from '@ant-design/react-native';
+import { View, Provider } from 'react-native';
+import { Tabs, Toast } from '@ant-design/react-native';
 import ListFoods from '../general/ListFoods';
-import axios from 'axios';
-const baseUrl = 'https://quanlynhahanguet.herokuapp.com/api';
+import { connect } from 'react-redux';
+import WithLoading from '../../component/withLoading';
+import { actions as billActions } from '../../redux/billRedux';
+
+const { getFoods, orderFoods } = billActions;
 
 class OrderFood extends React.Component {
   constructor() {
@@ -16,21 +19,25 @@ class OrderFood extends React.Component {
   }
   onSubmitFood = (value) => {
     console.log("OrderFood => onSubmitFood:", value)
-    axios.post(baseUrl + '/bill-detail', value).then(res => {
+    this.props.orderFoods(value).then(res => {
       console.log("OrderFood => res:", res);
+      if (res.response.data.success === true) {
+        Toast.success('Đặt món thành công!', 0.5, () => {
+          // props.navigation.navigate('OrderFood', { customer: this.state.customer, bill: res.response.data.bill })
+        });
+      }
     })
   }
 
   componentDidMount() {
-    axios.get(baseUrl + '/food-group')
+    this.props.getFoods()
       .then(res => {
-        const List = res.data;
         console.log('food group:', res);
         this.setState({
-          foodGroup: res.data.data
+          foodGroup: res.response.data.data
         })
         let tmp = []
-        res.data.data.forEach(element => {
+        res.response.data.data.forEach(element => {
           tmp.push({ title: element.name })
         });
         console.log(tmp)
@@ -38,28 +45,46 @@ class OrderFood extends React.Component {
       });
     console.log('OrderFood: => route.params:', this.props.route.params)
     const { customer } = this.props.route.params;
-    this.setState({ billId: this.props.route.params.bill[0].id })
+    this.setState({ billId: this.props.route.params.bill.id })
     this.props.navigation.setOptions({ title: `KH :  ${customer.full_name}` });
   }
 
   render() {
     const { foodGroup } = this.state;
     return (
-      <View style={{ flex: 1 }}>
-        <Tabs tabs={this.state.groupName}>
-          {
-            foodGroup.map(element => {
-              return (
-                <View style={{ flex: 1 }}>
-                  <ListFoods foods={element.foods} onSubmitFood={this.onSubmitFood} billId={this.state.billId} />
-                </View>
-              )
-            })
-          }
-        </Tabs>
-      </View >
+      <Provider>
+        <View style={{ flex: 1 }}>
+          <Tabs tabs={this.state.groupName}>
+            {
+              foodGroup.map(element => {
+                return (
+                  <View style={{ flex: 1 }}>
+                    <ListFoods foods={element.foods} onSubmitFood={this.onSubmitFood} billId={this.state.billId} />
+                  </View>
+                )
+              })
+            }
+          </Tabs>
+        </View >
+      </Provider>
+
     );
   }
 }
 
-export default OrderFood;
+const mapStateToProps = (state) => {
+  const { billReducer } = state;
+  return {
+    isFetching: billReducer.isFetching,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  getFoods: () => dispatch(getFoods()),
+  orderFoods: (payload) => dispatch(orderFoods(payload))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)((WithLoading(OrderFood)));

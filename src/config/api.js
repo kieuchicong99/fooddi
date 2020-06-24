@@ -54,4 +54,58 @@ export const API_URLS = {
 
   },
 
+  //BILL
+  BILL: {
+    createCustomer: (payload) => {
+      console.log('api =>createCustomer => payload', payload)
+      return {
+        endPoint: `/api/customers`,
+        method: 'POST',
+        headers: HEADERS.jsonHeader(),
+        name: 'CREATE_CUSTOMER',
+        payload,
+      };
+    },
+
+    getTables: () => {
+      return {
+        endPoint: `/api/tables`,
+        method: 'GET',
+        headers: HEADERS.header(),
+        name: 'GET_TABLE_BILL',
+      };
+    },
+
+    createBill: (payload) => {
+      console.log('api =>createBill => payload', payload)
+      return {
+        endPoint: `/api/bills`,
+        method: 'POST',
+        headers: HEADERS.jsonHeader(),
+        name: 'CREATE_BILL',
+        payload,
+      };
+    },
+
+    getFoods: () => {
+      return {
+        endPoint: `/api/food-group`,
+        method: 'GET',
+        headers: HEADERS.header(),
+        name: 'GET_FOODS_GROUP',
+      };
+    },
+
+    orderFoods: (payload) => {
+      return {
+        endPoint: `/api/bill-detail`,
+        method: 'POST',
+        headers: HEADERS.header(),
+        name: 'GET_FOODS_GROUP',
+        payload
+      };
+    }
+
+  },
+
 };

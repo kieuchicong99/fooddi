@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
 import { List, Provider, Toast, Radio } from '@ant-design/react-native';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntIcons from 'react-native-vector-icons/AntDesign';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import WithLoading from '../../component/withLoading';
+import { actions as billActions } from '../../redux/billRedux';
+
+const { createBill } = billActions;
 
 const RadioItem = Radio.RadioItem;
-const baseUrl = 'https://quanlynhahanguet.herokuapp.com/api';
 const Item = List.Item;
 const styles = StyleSheet.create({
   item: {
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default class ChooseTable extends Component {
+class ChooseTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -43,14 +43,19 @@ export default class ChooseTable extends Component {
   }
 
   createBill = (props) => {
-    console.log('create Bill:', [{ table: this.state.chooseTable, customer: this.state.customer, status: 'Or' }])
-    axios.post(baseUrl + '/bills', [{ table: this.state.chooseTable, customer: this.state.customer.id, status: 'Or' }])
+    console.log('create Bill:', { table: this.state.chooseTable, customer: this.state.customer, status: 'Or' })
+    this.props.createBill({ table: this.state.chooseTable, customer: this.state.customer.id, status: 'Or' })
       .then(res => {
-        let customer = res.data;
         console.log('Create bill res => data:', res);
-        Toast.success('Success!', 0.5, () => {
-          props.navigation.navigate('OrderFood', { customer: this.state.customer, bill: res.data.bill })
-        });
+        if (res.response.data.success === true) {
+          Toast.success('Success!', 0.5, () => {
+            props.navigation.navigate('OrderFood', { customer: this.state.customer, bill: res.response.data.bill })
+          });
+        }
+        if (res.response.data.success === false) {
+          Toast.fail(`${res.response.data.message} \nVui lòng đặt bàn khác`, 0.5);
+        }
+
       }, err => {
         Toast.fail('Có lỗi xảy ra:' + err, 0.5);
       });
@@ -95,13 +100,15 @@ export default class ChooseTable extends Component {
             </List>
           </ScrollView>
           <View style={{
-            alignItems: 'center'
+            alignItems: 'center', paddingVertical: 10
           }}>
             {this.state.chooseTable !== '' ? (<Button
               buttonStyle={{
                 borderRadius: 40,
                 padding: 10,
                 backgroundColor: '#4682c2',
+                height: 40,
+                minWidth: 120
               }}
               onPress={() =>
                 this.createBill(this.props)
@@ -119,3 +126,18 @@ export default class ChooseTable extends Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  const { billReducer } = state;
+  return {
+    isFetching: billReducer.isFetching,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  createBill: (payload, meta) => dispatch(createBill(payload, meta)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)((WithLoading(ChooseTable)));
