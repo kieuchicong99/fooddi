@@ -21,6 +21,8 @@ import Profile from './src/screens/login/Profile'
 import ProfileDetail from './src/screens/login/ProfileDetail'
 import Delivery from './src/screens/staff/Delivery';
 import ListPayment from './src/screens/cashier/ListPayment';
+import Storage from './src/utils/storage'
+// import Chart from './src/screens/manager/Chart';
 export const Stack = createStackNavigator();
 const TabMenu = createBottomTabNavigator();
 
@@ -120,24 +122,30 @@ const ChefStack = createStackNavigator();
 function ChefStackScreen() {
   return (
     <ChefStack.Navigator>
-      {/* <ChefStack.Screen
+      <ChefStack.Screen
         name="Chef"
         component={Chef}
         options={{
           headerShown: true,
-        }}></ChefStack.Screen> */}
+        }}></ChefStack.Screen>
       {/* <ChefStack.Screen
         name="Delivery"
         component={Delivery}
         options={{
           headerShown: true,
         }}></ChefStack.Screen> */}
-      <ChefStack.Screen
+      {/* <ChefStack.Screen
         name="Delivery"
         component={ListPayment}
         options={{
           headerShown: true,
-        }}></ChefStack.Screen>
+        }}></ChefStack.Screen> */}
+      {/* <ChefStack.Screen
+        name="Delivery"
+        component={Chart}
+        options={{
+          headerShown: true,
+        }}></ChefStack.Screen> */}
     </ChefStack.Navigator>
   );
 }
@@ -293,8 +301,367 @@ class AfterLogin extends React.Component {
     );
   }
 }
-export class AppNavigator extends React.Component {
+
+class AfterLoginOfServant extends React.Component {
   render() {
+    return (
+      <TabMenu.Navigator>
+        {/* <TabMenu.Screen
+          name="Home"
+          component={HomeStackScreen}
+          options={{
+            tabBarLabel: 'Home',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="home" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+        {/* <TabMenu.Screen
+          name="Food"
+          component={ListFoods}
+          options={{
+            tabBarLabel: 'Food',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return (
+                <MaterialCommunityIcons name="food" size={30} color="#69c3e0" />
+              );
+            },
+          }}
+        /> */}
+        <TabMenu.Screen
+          name="OrderFood"
+          component={OrderStackScreen}
+          options={{
+            tabBarLabel: 'Order',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <SimpleLineIcons name="note" size={30} color="#69c3e0" />;
+            },
+          }}
+        />
+        {/* <TabMenu.Screen
+          name="Payment"
+          component={PaymentStackScreen}
+          options={{
+            tabBarLabel: 'Payment',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <MaterialIcons name="payment" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+        <TabMenu.Screen
+          name="Settings"
+          component={SettingsStackScreen}
+          options={{
+            tabBarLabel: 'Setting',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="setting" size={30} color="#69c3e0" />;
+            },
+          }}
+        />
+
+        {/* <TabMenu.Screen
+          name="UserManage"
+          component={UserStackScreen}
+          options={{
+            tabBarLabel: 'UserManage',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="addusergroup" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+
+        {/* <TabMenu.Screen
+          name="ChefManage"
+          component={ChefStackScreen}
+          options={{
+            tabBarLabel: 'ChefManage',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="carryout" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+
+
+      </TabMenu.Navigator>
+    );
+  }
+}
+
+class AfterLoginOfChef extends React.Component {
+  render() {
+    return (
+      <TabMenu.Navigator>
+        {/* <TabMenu.Screen
+          name="Home"
+          component={HomeStackScreen}
+          options={{
+            tabBarLabel: 'Home',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="home" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+        {/* <TabMenu.Screen
+          name="Food"
+          component={ListFoods}
+          options={{
+            tabBarLabel: 'Food',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return (
+                <MaterialCommunityIcons name="food" size={30} color="#69c3e0" />
+              );
+            },
+          }}
+        /> */}
+        {/* <TabMenu.Screen
+          name="OrderFood"
+          component={OrderStackScreen}
+          options={{
+            tabBarLabel: 'Order',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <SimpleLineIcons name="note" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+        {/* <TabMenu.Screen
+          name="Payment"
+          component={PaymentStackScreen}
+          options={{
+            tabBarLabel: 'Payment',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <MaterialIcons name="payment" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+        <TabMenu.Screen
+          name="Settings"
+          component={SettingsStackScreen}
+          options={{
+            tabBarLabel: 'Setting',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="setting" size={30} color="#69c3e0" />;
+            },
+          }}
+        />
+
+        <TabMenu.Screen
+          name="UserManage"
+          component={UserStackScreen}
+          options={{
+            tabBarLabel: 'UserManage',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="addusergroup" size={30} color="#69c3e0" />;
+            },
+          }}
+        />
+
+        <TabMenu.Screen
+          name="ChefManage"
+          component={ChefStackScreen}
+          options={{
+            tabBarLabel: 'ChefManage',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="carryout" size={30} color="#69c3e0" />;
+            },
+          }}
+        />
+
+
+      </TabMenu.Navigator>
+    );
+  }
+}
+
+class AfterLoginOfCashier extends React.Component {
+  render() {
+    return (
+      <TabMenu.Navigator>
+        {/* <TabMenu.Screen
+          name="Home"
+          component={HomeStackScreen}
+          options={{
+            tabBarLabel: 'Home',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="home" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+        {/* <TabMenu.Screen
+          name="Food"
+          component={ListFoods}
+          options={{
+            tabBarLabel: 'Food',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return (
+                <MaterialCommunityIcons name="food" size={30} color="#69c3e0" />
+              );
+            },
+          }}
+        /> */}
+        {/* <TabMenu.Screen
+          name="OrderFood"
+          component={OrderStackScreen}
+          options={{
+            tabBarLabel: 'Order',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <SimpleLineIcons name="note" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+        {/* <TabMenu.Screen
+          name="Payment"
+          component={PaymentStackScreen}
+          options={{
+            tabBarLabel: 'Payment',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <MaterialIcons name="payment" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+        <TabMenu.Screen
+          name="Settings"
+          component={SettingsStackScreen}
+          options={{
+            tabBarLabel: 'Setting',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="setting" size={30} color="#69c3e0" />;
+            },
+          }}
+        />
+
+        {/* <TabMenu.Screen
+          name="UserManage"
+          component={UserStackScreen}
+          options={{
+            tabBarLabel: 'UserManage',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="addusergroup" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+
+        <TabMenu.Screen
+          name="ChefManage"
+          component={ChefStackScreen}
+          options={{
+            tabBarLabel: 'ChefManage',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="carryout" size={30} color="#69c3e0" />;
+            },
+          }}
+        />
+
+
+      </TabMenu.Navigator>
+    );
+  }
+}
+
+class AfterLoginOfManager extends React.Component {
+  render() {
+    return (
+      <TabMenu.Navigator>
+        {/* <TabMenu.Screen
+          name="Home"
+          component={HomeStackScreen}
+          options={{
+            tabBarLabel: 'Home',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="home" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+        {/* <TabMenu.Screen
+          name="Food"
+          component={ListFoods}
+          options={{
+            tabBarLabel: 'Food',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return (
+                <MaterialCommunityIcons name="food" size={30} color="#69c3e0" />
+              );
+            },
+          }}
+        /> */}
+        {/* <TabMenu.Screen
+          name="OrderFood"
+          component={OrderStackScreen}
+          options={{
+            tabBarLabel: 'Order',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <SimpleLineIcons name="note" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+        {/* <TabMenu.Screen
+          name="Payment"
+          component={PaymentStackScreen}
+          options={{
+            tabBarLabel: 'Payment',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <MaterialIcons name="payment" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+        <TabMenu.Screen
+          name="Settings"
+          component={SettingsStackScreen}
+          options={{
+            tabBarLabel: 'Setting',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="setting" size={30} color="#69c3e0" />;
+            },
+          }}
+        />
+
+        {/* <TabMenu.Screen
+          name="UserManage"
+          component={UserStackScreen}
+          options={{
+            tabBarLabel: 'UserManage',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="addusergroup" size={30} color="#69c3e0" />;
+            },
+          }}
+        /> */}
+
+        <TabMenu.Screen
+          name="ChefManage"
+          component={ChefStackScreen}
+          options={{
+            tabBarLabel: 'ChefManage',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="carryout" size={30} color="#69c3e0" />;
+            },
+          }}
+        />
+
+
+      </TabMenu.Navigator>
+    );
+  }
+}
+
+export class AppNavigator extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: {}
+    }
+  }
+  async componentDidMount() {
+    await Storage.getItem('user').then(res => {
+      // console.log('Profile:', res.full_name)
+      this.setState({ user: res || {} })
+    })
+  }
+  render() {
+    // 1: quan ly
+    // 2: dau bep 
+    // 3: thu ngan
+    // 4: phuc vu
+
+    const { office } = this.state.user
     return (
       <NavigationContainer>
         <Stack.Navigator>
@@ -310,7 +677,10 @@ export class AppNavigator extends React.Component {
           /> */}
           <Stack.Screen
             name="AfterLogin"
-            component={AfterLogin}
+            component={
+              // office === 4 ? AfterLoginOfServant : office === 3 ? AfterLoginOfChef : office === 2 ? AfterLoginOfCashier : office === 1 ? AfterLoginOfManager :
+              AfterLogin
+            }
             options={{
               title: null,
               headerStyle: {

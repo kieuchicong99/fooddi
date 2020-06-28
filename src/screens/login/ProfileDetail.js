@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Image, ScrollView, View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { Image, ScrollView, View, Text, StyleSheet, ImageBackground, StatusBar } from 'react-native';
 import { List } from '@ant-design/react-native';
 import AntDesin from 'react-native-vector-icons/AntDesign'
 import { Button } from 'react-native-elements';
+import Storage from '../../utils/storage'
 const Item = List.Item;
 const Brief = Item.Brief;
 const styles = StyleSheet.create({
@@ -16,13 +17,30 @@ const styles = StyleSheet.create({
 export default class ProfileDetail extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      user: {}
+    }
+
 
   }
 
+  async componentDidMount() {
+    await Storage.getItem('user').then(res => {
+      console.log('Profile:', res.full_name)
+      this.setState({ user: res })
+    })
+  }
+
   render() {
+    const { user } = this.state;
     return (
       <View style={{ flex: 1 }}>
 
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
         <ScrollView
           style={{ flex: 1, backgroundColor: '#f5f5f9' }}
           automaticallyAdjustContentInsets={false}
@@ -53,9 +71,15 @@ export default class ProfileDetail extends Component {
 
             <Item
               arrow="horizontal"
-              extra='admin'
+              extra={user.username}
             >
               Tên tài khoản
+          </Item>
+            <Item
+              arrow="horizontal"
+              extra={user.office_name}
+            >
+              Chức vụ
           </Item>
           </List>
 
@@ -63,18 +87,19 @@ export default class ProfileDetail extends Component {
             <Item
               disabled
               arrow="horizontal"
-              extra='0795038669'
+              onPress={() => { }}
+              extra={user.full_name}
             >
-              Số điện thoại
+              Tên của bạn
           </Item>
             <Item
               disabled
               arrow="horizontal"
-              onPress={() => { }}
-              extra='Công'
+              extra='0795038669'
             >
-              Tên của bạn
+              Số điện thoại
           </Item>
+
           </List>
           <List renderHeader={''}>
             <Item

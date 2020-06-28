@@ -50,8 +50,8 @@ class ChooseTable extends Component {
   }
 
   createBill = (props) => {
-    console.log('create Bill:', { table: this.state.chooseTable, customer: this.state.customer, status: 'Or' })
-    this.props.createBill({ table: this.state.chooseTable, customer: this.state.customer.id, status: 'Or' })
+    console.log('create Bill:', { table: this.state.chooseTable, customer: this.state.customer, status: 'OR' })
+    this.props.createBill({ table: this.state.chooseTable, customer: this.state.customer.id, status: 'OR' })
       .then(res => {
         console.log('Create bill res => data:', res);
         if (res.response.data.success === true) {

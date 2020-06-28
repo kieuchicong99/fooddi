@@ -18,6 +18,16 @@ const initialState = {
   didInvalidate: true,
 };
 
+const client = new WebSocket('ws://45.32.23.158:8000/ws/chat/order/')
+let isLoadding = true;
+client.onmessage = (message) => {
+  console.log('message', message.data);
+  const { type } = JSON.parse(message.data)
+  if (type && type === 'confirm') {
+    // actions.
+  }
+};
+
 export const actions = {
 
   //get list tables
@@ -58,23 +68,28 @@ export const actions = {
   }),
 
   orderFoods: (payload, meta) => async (dispatch) => {
-    console.log('billRedux => orderFoods => payload:', payload)
-    const api = API_URLS.BILL.orderFoods(payload);
+    // console.log('billRedux => orderFoods => payload:', payload)
+    // const api = API_URLS.BILL.orderFoods(payload);
     dispatch(actions.orderingFoods());
-    const { response, error } = await apiCall(api);
-    console.log('billRedux => orderFoods => response:', response)
-    if (!error && response.status === 200) {
-      dispatch(actions.orderFoodsSuccess());
-      if (meta && meta.onSuccess) {
-        meta.onSuccess();
-      }
-    } else {
-      dispatch(actions.orderFoodsFailure(error));
-      if (meta && meta.onError) {
-        meta.onError(error);
-      }
+    let data = {
+      data: payload
     }
-    return { response, error };
+    console.log('billRedux => orderFoods => data:', data)
+    client.send(JSON.stringify(data));
+    console.log('finish')
+    // console.log('billRedux => orderFoods => response:', response)
+    // if (!error && response.status === 200) {
+    //   dispatch(actions.orderFoodsSuccess());
+    //   if (meta && meta.onSuccess) {
+    //     meta.onSuccess();
+    //   }
+    // } else {
+    //   dispatch(actions.orderFoodsFailure(error));
+    //   if (meta && meta.onError) {
+    //     meta.onError(error);
+    //   }
+    // }
+    // return { response, error };
   },
 
   orderingFoods: () => ({

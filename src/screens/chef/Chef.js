@@ -3,9 +3,10 @@ import {
   View,
   StyleSheet,
   Text,
-  ScrollView
+  ScrollView,
+
 } from 'react-native';
-import { List, InputItem, Modal, Provider } from '@ant-design/react-native';
+import { List, InputItem, Modal, Provider, Toast } from '@ant-design/react-native';
 import { Button, Slider } from 'react-native-elements';
 import { Button as ButtonCustom } from '../../component/button';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -49,18 +50,25 @@ class Chef extends Component {
     };
 
     this.state.client.onmessage = (message) => {
-      console.log('onmessage');
-      let data = JSON.parse(message.data)
-      let listFood = [...data.message];
-      listFood.map(item => {
-        console.log('item:', item)
-        return { key: '0', item, }
-      })
+      console.log('message', message.data);
+      const { type } = JSON.parse(message.data)
+      if (type && type === 'confirm') {
+        Toast.success('Success!', 0.5, () => {
+          this.setState({ openModal: false, numMade: 0 })
+        });
+      }
+      else {
+        let data = JSON.parse(message.data)
+        let listFood = [...data.message];
+        listFood.map(item => {
+          // console.log('item:', item)
+          return { key: '0', item, }
+        })
 
-      console.log('listFood:', listFood)
-      this.setState({ listFood: listFood })
-      console.log('this.state  =>:', this.state.listFood);
-
+        // console.log('listFood:', listFood)
+        this.setState({ listFood: listFood })
+        // console.log('this.state  =>:', this.state.listFood);
+      }
     };
 
   }
@@ -112,7 +120,7 @@ class Chef extends Component {
             >
               {
                 (this.state.listFood?.length > 0) ? this.state.listFood.map((item) => {
-                  console.log('item:', item)
+                  // console.log('item:', item)
                   return (
                     <Item>
                       <View style={{ flex: 1, flexDirection: 'row', height: '100%' }}>
@@ -135,7 +143,7 @@ class Chef extends Component {
                               <AntIcon name="bells" size={20} color="#35b043" />
                             }
                             onPress={() => {
-                              console.log('item:', item);
+                              // console.log('item:', item);
                               this.onSubmit()
                               this.setState({
                                 food__name: item.food__name,
@@ -161,7 +169,7 @@ class Chef extends Component {
           transparent
           onClose={
             () => {
-              console.log('onClose');
+              // console.log('onClose');
               this.setState({ openModal: false, numMade: 0 })
             }
           }

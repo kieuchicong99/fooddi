@@ -1,32 +1,58 @@
 import React from 'react';
-import { View, Provider } from 'react-native';
-import { Tabs, Toast } from '@ant-design/react-native';
+import { View, } from 'react-native';
+import { Tabs, Toast, Provider, ActivityIndicator } from '@ant-design/react-native';
 import ListFoods from '../general/ListFoods';
 import { connect } from 'react-redux';
 import WithLoading from '../../component/withLoading';
 import { actions as billActions } from '../../redux/billRedux';
+import Colors from '../../utils/Colors';
 
 const { getFoods, orderFoods } = billActions;
 
 class OrderFood extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       foodGroup: [],
       groupName: [],
-      billId: ''
+      billId: '',
+      client: new WebSocket('ws://45.32.23.158:8000/ws/chat/order/'),
+      isFetching: false
     }
+
+    this.state.client.onmessage = (message) => {
+      console.log('message', message.data);
+      const { type } = JSON.parse(message.data)
+      if (type && type === 'confirm') {
+
+        this.setState({ isFetching: false })
+        Toast.success('Success!', 0.5, () => {
+          this.setState({ openModal: false, numMade: 0 })
+        });
+      }
+      else {
+        let data = JSON.parse(message.data)
+        this.setState({ isFetching: false })
+
+      }
+    };
   }
   onSubmitFood = (value) => {
     console.log("OrderFood => onSubmitFood:", value)
-    this.props.orderFoods(value).then(res => {
-      console.log("OrderFood => res:", res);
-      if (res.response.data.success === true) {
-        Toast.success('Đặt món thành công!', 0.5, () => {
-          // props.navigation.navigate('OrderFood', { customer: this.state.customer, bill: res.response.data.bill })
-        });
-      } 123
-    })
+    let payload = {
+      data: value
+    }
+    // this.props.orderFoods(value).then(res => {
+    //   console.log("OrderFood => res:", res);
+    //   if (res.response.data.success === true) {
+    //     Toast.success('Đặt món thành công!', 0.5, () => {
+    //       // props.navigation.navigate('OrderFood', { customer: this.state.customer, bill: res.response.data.bill })
+    //     });
+    //   }
+    // })
+
+    this.state.client.send(JSON.stringify(payload))
+    this.setState({ isFetching: true })
   }
 
   componentDidMount() {
@@ -53,6 +79,18 @@ class OrderFood extends React.Component {
     const { foodGroup } = this.state;
     return (
       <Provider>
+        <ActivityIndicator
+          size="large"
+          color={Colors.greenMain}
+          animating={this.state.isFetching}
+          style={{
+            backgroundColor: 'rgba(0, 166, 81, 0)',
+            position: 'absolute',
+            zIndex: 1000,
+            top: '40%',
+            left: '48%',
+          }}
+        />
         <View style={{ flex: 1 }}>
           <Tabs tabs={this.state.groupName}>
             {
@@ -81,10 +119,12 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   getFoods: () => dispatch(getFoods()),
-  orderFoods: (payload) => dispatch(orderFoods(payload))
+  // orderFoods: (payload) => dispatch(orderFoods(payload))
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)((WithLoading(OrderFood)));
+)(OrderFood);
+
+// export default OrderFood;

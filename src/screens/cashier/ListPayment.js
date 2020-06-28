@@ -5,7 +5,7 @@ import {
   Text,
   ScrollView
 } from 'react-native';
-import { List, InputItem, Modal, Provider } from '@ant-design/react-native';
+import { List, InputItem, Modal, Provider, Toast } from '@ant-design/react-native';
 import { Button, Slider } from 'react-native-elements';
 import { Button as ButtonCustom } from '../../component/button';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -21,10 +21,8 @@ class ListPayment extends Component {
     super(props);
     this.state = {
       openModal: false,
-      table: '',
-      food: '',
-      amount: '',
       id: '',
+      status: '',
       client: new WebSocket('ws://45.32.23.158:8000/ws/chat/payment/')
     };
 
@@ -44,18 +42,25 @@ class ListPayment extends Component {
     };
 
     this.state.client.onmessage = (message) => {
-      console.log('onmessage');
-      let data = JSON.parse(message.data)
-      let listFood = [...data.message];
-      listFood.map(item => {
-        console.log('item:', item)
-        return { key: '0', item, }
-      })
+      console.log('message', message.data);
+      const { type } = JSON.parse(message.data)
+      if (type && type === 'confirm') {
+        Toast.success('Success!', 0.5, () => {
+          this.setState({ openModal: false, numMade: 0 })
+        });
+      }
+      else {
+        let data = JSON.parse(message.data)
+        let listFood = [...data.message];
+        listFood.map(item => {
+          // console.log('item:', item)
+          return { key: '0', item, }
+        })
 
-      console.log('listFood:', listFood)
-      this.setState({ listFood: listFood })
-      console.log('this.state  =>:', this.state.listFood);
-
+        // console.log('listFood:', listFood)
+        this.setState({ listFood: listFood })
+        // console.log('this.state  =>:', this.state.listFood);
+      }
     };
 
   }
@@ -122,7 +127,7 @@ class ListPayment extends Component {
             >
               {
                 (this.state.listFood?.length > 0) ? this.state.listFood.map((item) => {
-                  console.log('item:', item)
+                  // console.log('item:', item)
                   return (
                     <Item>
                       <View style={{ flex: 1, flexDirection: 'row', height: '100%' }}>
@@ -144,7 +149,7 @@ class ListPayment extends Component {
                         </View>
                         <View style={{ width: '15%', alignItems: 'center' }}>
                           <Text>
-                            {item.status === false ? 'Chưa' : 'Rồi'}
+                            {item.status}
                           </Text>
                         </View>
                         <View style={{ width: '15%', alignItems: 'center' }}>
@@ -152,7 +157,7 @@ class ListPayment extends Component {
                             {'chi tiết'}
                           </Text>
                         </View>
-                        {item.status === false ?
+                        {item.status === 'OR' ?
                           <View style={{ width: '15%', justifyContent: 'center', alignItems: 'flex-end' }}>
                             <Button
                               buttonStyle={{ width: 20, height: 20, backgroundColor: '#ffffff', borderRadius: 15, padding: 0 }}
@@ -160,13 +165,11 @@ class ListPayment extends Component {
                                 <AntIcon name="bells" size={20} color="#35b043" />
                               }
                               onPress={() => {
-                                console.log('item:', item);
+                                // console.log('item:', item);
                                 this.onSubmit()
                                 this.setState({
-                                  table: item.table,
-                                  food: item.food,
-                                  amount: item.amount,
                                   id: item.id,
+                                  status: 'OR'
 
                                 })
 
@@ -174,7 +177,28 @@ class ListPayment extends Component {
                             />
                           </View>
                           :
-                          <></>
+                          item.status === 'PR' ?
+                            <View style={{ width: '15%', justifyContent: 'center', alignItems: 'flex-end' }}>
+                              <Button
+                                buttonStyle={{ width: 20, height: 20, backgroundColor: '#ffffff', borderRadius: 15, padding: 0 }}
+                                icon={
+                                  <AntIcon name="bells" size={20} color="#35b043" />
+                                }
+                                onPress={() => {
+                                  // console.log('item:', item);
+                                  this.onSubmit()
+                                  this.setState({
+                                    id: item.id,
+                                    status: 'PR'
+
+                                  })
+
+                                }}
+                              />
+                            </View>
+                            :
+
+                            <></>
                         }
 
 
@@ -188,7 +212,7 @@ class ListPayment extends Component {
           <View />
         </View >
         <Modal
-          style={{ width: '65%', height: '15%', marginTop: -50, minHeight: 150 }}
+          style={{ width: '65%', height: '15%', minHeight: 120 }}
           title={<Text style={{ textAlign: 'center', fontSize: 18 }}>{this.state.titleModal}</Text>}
           transparent
           onClose={
@@ -202,7 +226,7 @@ class ListPayment extends Component {
 
         >
           <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', marginVertical: 15 }}>
-            <View style={{ flexDirection: 'row', paddingVertical: 15, marginTop: 15 }}>
+            <View style={{ flexDirection: 'row', paddingVertical: 15, marginTop: 10 }}>
               <View style={{ width: '30%', alignItems: 'flex-start' }}>
                 <Text style={{ fontSize: 16 }}>
                   {this.state.table}
@@ -220,13 +244,13 @@ class ListPayment extends Component {
               </View>
             </View>
 
-            <View style={{ marginTop: 30 }}>
+            <View style={{ marginTop: 0 }}>
               <ButtonCustom type='first' title='Xác nhận' buttonStyle={{ minHeight: 35 }}
                 onPress={() => {
                   let payload = {
                     data: {
                       id: this.state.id,
-                      delivery_by: 'CONG'
+                      status: this.state.status === 'OR' ? 'PR' : this.state.status === 'PR' ? 'PA' : ''
                     }
                   }
 

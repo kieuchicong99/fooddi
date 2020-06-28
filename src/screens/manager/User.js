@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, TextInput, ScrollView, FlatList, RefreshControl, StatusBar } from 'react-native'
 import { Table, Row, Rows } from 'react-native-table-component';
 import { Button } from 'react-native-elements';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -12,6 +12,7 @@ import {
 import WithLoading from '../../component/withLoading';
 import { connect } from 'react-redux';
 import { actions as userActions } from '../../redux/userRedux';
+// import { FlatList } from 'react-native-gesture-handler';
 
 const { getUsers, updateUser, insertUser, deleteUser } = userActions;
 
@@ -90,7 +91,8 @@ class User extends Component {
       full_name: '',
       office: '',
       office_name: '',
-      id: ''
+      id: '',
+      refreshing: false,
     }
 
   }
@@ -157,196 +159,211 @@ class User extends Component {
     console.log('state: ', this.state)
     return (
       <Provider>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+        <FlatList
+          data={[1]}
+          renderItem={({ item }) => <>
+            <View style={{ flexDirection: 'row', padding: 10, marginTop: 20 }}>
+              <View style={{ fontSize: 18, width: '60%' }}>
+                <Text style={{ fontSize: 18, textTransform: 'uppercase' }}>Danh sách người dùng</Text>
+              </View>
+              <View style={{ width: '40%', alignItems: 'flex-end' }}>
+                <Button
+                  buttonStyle={{ width: 120, height: 30, borderRadius: 15, padding: 15, paddingTop: 10, paddingBottom: 10, marginBottom: 15 }}
+                  title='Thêm'
+                  icon={
+                    <AntIcon name="plus" size={20} color="#FFFFFF" />
+                  }
+                  onPress={() => {
+                    this.setState({ openModal: true, titleModal: 'Tạo tài khoản' })
+                  }}
+                />
+              </View>
+            </View>
 
-        <View style={{ flexDirection: 'row', padding: 10 }}>
-          <View style={{ fontSize: 18, width: '60%' }}>
-            <Text style={{ fontSize: 18, textTransform: 'uppercase' }}>Danh sách người dùng</Text>
-          </View>
-          <View style={{ width: '40%', alignItems: 'flex-end' }}>
-            <Button
-              buttonStyle={{ width: 120, height: 30, borderRadius: 15, padding: 15, paddingTop: 10, paddingBottom: 10, marginBottom: 15 }}
-              title='Thêm'
-              icon={
-                <AntIcon name="plus" size={20} color="#FFFFFF" />
+            <ScrollView style={{ ...styles.container, paddingTop: 10 }}>
+              <Table borderStyle={{ borderWidth: 2, borderColor: '#c8e1ff' }} style={{ marginBottom: 40 }}>
+                <Row data={this.state.tableHead} style={styles.head} textStyle={styles.text} />
+                <Rows data={this.state.tableData} textStyle={styles.text} />
+              </Table>
+            </ScrollView>
+            <Modal
+              style={{ width: '85%', height: '55%', marginTop: -50, minHeight: 310 }}
+              title={<Text style={{ textAlign: 'center', fontSize: 18 }}>{this.state.titleModal}</Text>}
+              transparent
+              onClose={
+                () => {
+                  console.log('onClose');
+                  this.setState({ id: '', username: '', full_name: '', office: '', password: '' });
+                  this.setState({ openModal: false })
+                }
               }
-              onPress={() => {
-                this.setState({ openModal: true, titleModal: 'Tạo tài khoản' })
-              }}
-            />
-          </View>
-        </View>
+              visible={this.state.openModal}
+              closable
 
-        <ScrollView style={{ ...styles.container, paddingTop: 10 }}>
-          <Table borderStyle={{ borderWidth: 2, borderColor: '#c8e1ff' }} style={{ marginBottom: 40 }}>
-            <Row data={this.state.tableHead} style={styles.head} textStyle={styles.text} />
-            <Rows data={this.state.tableData} textStyle={styles.text} />
-          </Table>
-        </ScrollView>
-        <Modal
-          style={{ width: '85%', height: '55%', marginTop: -50, minHeight: 310 }}
-          title={<Text style={{ textAlign: 'center', fontSize: 18 }}>{this.state.titleModal}</Text>}
-          transparent
-          onClose={
-            () => {
-              console.log('onClose');
-              this.setState({ id: '', username: '', full_name: '', office: '', password: '' });
-              this.setState({ openModal: false })
-            }
-          }
-          visible={this.state.openModal}
-          closable
+            >
+              <ScrollView style={{ marginTop: 10 }}>
+                <View
+                  style={{
+                    ...styles.rowInput
+                  }}>
+                  <View
+                    style={{
+                      width: '30%',
+                      borderRightColor: '#D2D2D2',
+                      borderRightWidth: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text>Chức vụ</Text>
+                  </View>
+                  <View style={{ width: '70%' }}>
+                    <RNPickerSelect
+                      onValueChange={(value) => { this.setState({ office: value }) }}
+                      placeholder={{ label: this.state.office_name !== '' ? this.state.office_name : 'Chọn chức vụ' }}
+                      items={[
+                        { label: 'Quản lý', value: 1 },
+                        { label: 'Đầu bếp', value: 2 },
+                        { label: 'Thu ngân', value: 3 },
+                        { label: 'Phục vụ', value: 4 },
+                      ]}
+                    />
+                  </View>
+                </View>
+                <View
+                  style={{
+                    ...styles.rowInput
+                  }}>
+                  <View
+                    style={{
+                      width: '30%',
+                      borderRightColor: '#D2D2D2',
+                      borderRightWidth: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text>Tài khoản</Text>
+                  </View>
+                  <View style={{ width: '70%' }}>
+                    <TextInput
+                      placeholder="username"
+                      placeholderTextColor="#363636"
+                      style={{
+                        ...styles.input
+                      }}
+                      value={this.state.username}
+                      onChangeText={value => {
+                        this.setState({
+                          username: value,
+                        });
+                      }}
+                    />
+                  </View>
+                </View>
+                <View
+                  style={{
+                    ...styles.rowInput
+                  }}>
+                  <View
+                    style={{
+                      width: '30%',
+                      borderRightColor: '#D2D2D2',
+                      borderRightWidth: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text>Mật khẩu</Text>
+                  </View>
+                  <View style={{ width: '70%' }}>
+                    <TextInput
+                      placeholder="password"
+                      placeholderTextColor="#363636"
+                      style={{
+                        ...styles.input
+                      }}
+                      value={this.state.password}
+                      onChangeText={value => {
+                        this.setState({
+                          password: value,
+                        });
+                      }}
+                    />
+                  </View>
+                </View>
+                <View
+                  style={{
+                    ...styles.rowInput
+                  }}>
+                  <View
+                    style={{
+                      width: '30%',
+                      borderRightColor: '#D2D2D2',
+                      borderRightWidth: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text>Tên</Text>
+                  </View>
+                  <View style={{ width: '70%' }}>
+                    <TextInput
+                      placeholder="full_name"
+                      placeholderTextColor="#363636"
+                      style={{
+                        ...styles.input
+                      }}
+                      value={this.state.full_name}
+                      onChangeText={value => {
+                        this.setState({
+                          full_name: value,
+                        });
+                      }}
+                    />
+                  </View>
+                </View>
+                <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+                  <View style={{ alignItems: 'flex-start', width: '50%' }}>
+                    <Button
+                      buttonStyle={{ height: 30, borderRadius: 15, backgroundColor: 'white', padding: 15, paddingTop: 10, paddingBottom: 10, marginBottom: 15 }}
+                      title='Hủy'
+                      titleStyle={{ color: 'red' }}
+                      icon={
+                        <AntIcon name="close" size={20} color="red" />
+                      }
+                      onPress={() => {
+                        this.setState({ id: '', username: '', full_name: '', office: '', password: '' })
+                        this.setState({ openModal: false })
+                      }}
+                    />
+                  </View>
+                  <View style={{ width: '50%', alignItems: 'flex-end' }}>
+                    <Button
+                      buttonStyle={{ height: 30, borderRadius: 15, backgroundColor: 'white', padding: 15, paddingTop: 10, paddingBottom: 10, marginBottom: 15 }}
+                      title='Chọn'
+                      titleStyle={{ color: '#2089DC' }}
+                      icon={
+                        <AntIcon name="save" size={20} color="#2089DC" />
+                      }
+                      onPress={() => {
+                        this.onSubmit()
+                        this.setState({ openModal: false })
+                      }}
+                    />
+                  </View>
+                </View>
+              </ScrollView>
+            </Modal>
 
-        >
-          <ScrollView style={{ marginTop: 10 }}>
-            <View
-              style={{
-                ...styles.rowInput
-              }}>
-              <View
-                style={{
-                  width: '30%',
-                  borderRightColor: '#D2D2D2',
-                  borderRightWidth: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text>Chức vụ</Text>
-              </View>
-              <View style={{ width: '70%' }}>
-                <RNPickerSelect
-                  onValueChange={(value) => { this.setState({ office: value }) }}
-                  placeholder={{ label: this.state.office_name !== '' ? this.state.office_name : 'Chọn chức vụ' }}
-                  items={[
-                    { label: 'Quản lý', value: 1 },
-                    { label: 'Đầu bếp', value: 2 },
-                    { label: 'Thu ngân', value: 3 },
-                    { label: 'Phục vụ', value: 4 },
-                  ]}
-                />
-              </View>
-            </View>
-            <View
-              style={{
-                ...styles.rowInput
-              }}>
-              <View
-                style={{
-                  width: '30%',
-                  borderRightColor: '#D2D2D2',
-                  borderRightWidth: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text>Tài khoản</Text>
-              </View>
-              <View style={{ width: '70%' }}>
-                <TextInput
-                  placeholder="username"
-                  placeholderTextColor="#363636"
-                  style={{
-                    ...styles.input
-                  }}
-                  value={this.state.username}
-                  onChangeText={value => {
-                    this.setState({
-                      username: value,
-                    });
-                  }}
-                />
-              </View>
-            </View>
-            <View
-              style={{
-                ...styles.rowInput
-              }}>
-              <View
-                style={{
-                  width: '30%',
-                  borderRightColor: '#D2D2D2',
-                  borderRightWidth: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text>Mật khẩu</Text>
-              </View>
-              <View style={{ width: '70%' }}>
-                <TextInput
-                  placeholder="password"
-                  placeholderTextColor="#363636"
-                  style={{
-                    ...styles.input
-                  }}
-                  value={this.state.password}
-                  onChangeText={value => {
-                    this.setState({
-                      password: value,
-                    });
-                  }}
-                />
-              </View>
-            </View>
-            <View
-              style={{
-                ...styles.rowInput
-              }}>
-              <View
-                style={{
-                  width: '30%',
-                  borderRightColor: '#D2D2D2',
-                  borderRightWidth: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text>Tên</Text>
-              </View>
-              <View style={{ width: '70%' }}>
-                <TextInput
-                  placeholder="full_name"
-                  placeholderTextColor="#363636"
-                  style={{
-                    ...styles.input
-                  }}
-                  value={this.state.full_name}
-                  onChangeText={value => {
-                    this.setState({
-                      full_name: value,
-                    });
-                  }}
-                />
-              </View>
-            </View>
-            <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-              <View style={{ alignItems: 'flex-start', width: '50%' }}>
-                <Button
-                  buttonStyle={{ height: 30, borderRadius: 15, backgroundColor: 'white', padding: 15, paddingTop: 10, paddingBottom: 10, marginBottom: 15 }}
-                  title='Hủy'
-                  titleStyle={{ color: 'red' }}
-                  icon={
-                    <AntIcon name="close" size={20} color="red" />
-                  }
-                  onPress={() => {
-                    this.setState({ id: '', username: '', full_name: '', office: '', password: '' })
-                    this.setState({ openModal: false })
-                  }}
-                />
-              </View>
-              <View style={{ width: '50%', alignItems: 'flex-end' }}>
-                <Button
-                  buttonStyle={{ height: 30, borderRadius: 15, backgroundColor: 'white', padding: 15, paddingTop: 10, paddingBottom: 10, marginBottom: 15 }}
-                  title='Chọn'
-                  titleStyle={{ color: '#2089DC' }}
-                  icon={
-                    <AntIcon name="save" size={20} color="#2089DC" />
-                  }
-                  onPress={() => {
-                    this.onSubmit()
-                    this.setState({ openModal: false })
-                  }}
-                />
-              </View>
-            </View>
-          </ScrollView>
-        </Modal>
+          </>}
+          keyExtractor={item => item.id}
+          refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={() => {
+            this.props.getUsers()
+          }} />}
+          contentContainerStyle={styles.list} />
+
       </Provider >
     );
   }

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Image, ScrollView, View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import { Image, ScrollView, View, Text, StyleSheet, ImageBackground, TouchableOpacity, StatusBar } from 'react-native';
 import { List } from '@ant-design/react-native';
 import AntDesin from 'react-native-vector-icons/AntDesign'
 import { Button } from 'react-native-elements';
+import Storage from '../../utils/storage'
 const Item = List.Item;
 const Brief = Item.Brief;
 const styles = StyleSheet.create({
@@ -16,13 +17,33 @@ const styles = StyleSheet.create({
 export default class Profile extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      user: {}
+    }
 
+
+  }
+
+  // getUser = async () => {
+  //   let a = await Storage.getItem('user')
+
+  //   return a.full_name;
+  // }
+  async componentDidMount() {
+    await Storage.getItem('user').then(res => {
+      console.log('Profile:', res.full_name)
+      this.setState({ user: res })
+    })
   }
 
   render() {
     return (
       <View style={{ flex: 1 }}>
-
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
         <ScrollView
           style={{ flex: 1, backgroundColor: '#f5f5f9' }}
           automaticallyAdjustContentInsets={false}
@@ -44,7 +65,7 @@ export default class Profile extends Component {
 
           </View>
           <List
-            renderHeader={<Text style={{ textAlign: 'center', fontSize: 16, fontFamily: 'Helvetica Neue' }}>Kiều Chí Công</Text>}>
+            renderHeader={<Text style={{ textAlign: 'center', fontSize: 16, fontFamily: 'Helvetica Neue' }}>{this.state.user.full_name}</Text>}>
             <Item arrow="horizontal" thumb={<AntDesin name='creditcard' size={20} style={{ paddingRight: 10 }} />}>
               Thẻ Thanh toán
           </Item>
@@ -84,6 +105,8 @@ export default class Profile extends Component {
               marginTop: 20,
             }}
             onPress={() => {
+              Storage.removeItem('user')
+              this.props.navigation.navigate('Login')
             }}
             title="Đăng xuất"
             titleStyle={{ fontSize: 20, textAlign: 'center', color: 'white' }}
@@ -94,7 +117,7 @@ export default class Profile extends Component {
             </Text>
 
           <Text style={{ textAlign: 'center', fontSize: 16, marginTop: 10, marginBottom: 20 }}>
-            Fooddi Restaurent Application
+            Starter Restaurent Application
             </Text>
         </ScrollView>
         <View />

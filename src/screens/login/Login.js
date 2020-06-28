@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   PushNotificationIOS,
+  StatusBar,
 } from 'react-native';
 const background = require('../../assets/login.jpg');
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -19,17 +20,37 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import userApi from '../../repository/user_repository'
 import { Button } from 'react-native-elements';
 import { Toast, Provider } from '@ant-design/react-native';
+import Storage from '../../utils/storage'
 export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = { username: '', password: '' };
   }
 
+  CheckTextInput = () => {
+    if (this.state.username != '') {
+      if (this.state.password != '') {
+        return true;
+      } else {
+        alert('Hãy nhập mật khẩu'); AfterLogin
+        return false;
+      }
+    } else {
+      alert('Hãy nhập tên đăng nhập');
+      return false
+    }
+  };
+
   render() {
     const { navigation } = this.props;
     return (
 
       <Provider>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="light-content"
+        />
         <KeyboardAwareScrollView contentContainerStyle={styles.container}>
           <View>
             <ImageBackground
@@ -133,16 +154,20 @@ export default class Login extends Component {
                   }}
 
                   onPress={() => {
-                    let payload = { username: this.state.username, password: this.state.username }
-                    console.log('Login => payload:', payload)
-                    userApi.login(payload).then(res => {
-                      console.log('res:', res);
-                      if (res.status === 200 && res.data.success === true) {
-                        Toast.success('Đăng nhập thành công', 0.5, () => {
-                          this.props.navigation.navigate('AfterLogin', { user: res.data.data })
-                        });
-                      }
-                    })
+                    if (this.CheckTextInput()) {
+                      let payload = { username: this.state.username, password: this.state.password }
+                      console.log('Login => payload:', payload)
+                      userApi.login(payload).then(res => {
+                        console.log('res:', res);
+                        if (res.status === 200 && res.data.success === true) {
+                          Storage.setItem('user', res.data.data);
+                          console.log('user:', res.data.data.full_name);
+                          Toast.success(`Đăng nhập thành công\n Xin chào ${res.data.data.full_name}`, 0.5, () => {
+                            this.props.navigation.navigate('AfterLogin', { user: res.data.data })
+                          });
+                        }
+                      })
+                    }
 
                   }}
                   title="Đăng nhập"
