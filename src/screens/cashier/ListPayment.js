@@ -133,7 +133,7 @@ class ListPayment extends Component {
 
                         <View style={{ width: '15%', alignItems: 'center', }}>
                           <Text>
-                            {item.total_money}
+                            {item.total} k
                           </Text>
                         </View>
                         <View style={{ width: '30%', alignItems: 'center' }}>
