@@ -3,17 +3,18 @@ import {
   View,
   StyleSheet,
   Text,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from 'react-native';
 import { List, InputItem, Modal, Provider, Toast } from '@ant-design/react-native';
 import { Button, Slider } from 'react-native-elements';
 import { Button as ButtonCustom } from '../../component/button';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import Constants from '../../utils/Constants'
+const { screenWidth } = Constants;
+import moment from 'moment'
+import Colors from '../../utils/Colors';
 const Item = List.Item;
-const styles = StyleSheet.create({
-
-});
-
 
 
 class ListPayment extends Component {
@@ -30,7 +31,6 @@ class ListPayment extends Component {
       this.setState({
         openModal: false,
         listFood: [],
-
       });
 
     };
@@ -50,16 +50,7 @@ class ListPayment extends Component {
         });
       }
       else {
-        let data = JSON.parse(message.data)
-        let listFood = [...data.message];
-        listFood.map(item => {
-          // console.log('item:', item)
-          return { key: '0', item, }
-        })
 
-        // console.log('listFood:', listFood)
-        this.setState({ listFood: listFood })
-        // console.log('this.state  =>:', this.state.listFood);
       }
     };
 
@@ -85,30 +76,30 @@ class ListPayment extends Component {
           <ScrollView
             style={{ flex: 1, backgroundColor: '#f5f5f9' }}
           >
-            <Item style={{ width: '100%' }} >
-              <View style={{ flexDirection: 'row', width: '100%' }}>
-                <View style={{ width: '10%' }}>
+            <Item style={{ width: screenWidth }} >
+              <View style={{ flexDirection: 'row', width: screenWidth }}>
+                <View style={{ width: '15%' }}>
                   <Text>
                     {'Bàn'}
                   </Text>
                 </View>
-                <View style={{ width: '15%', alignItems: 'flex-start' }}>
+                <View style={{ width: '15%', alignItems: 'flex-start', marginLeft: -10 }}>
                   <Text>
                     {'Số tiền'}
                   </Text>
                 </View>
 
-                <View style={{ width: '15%', alignItems: 'flex-start' }}>
+                <View style={{ width: '25%', alignItems: 'flex-start' }}>
                   <Text>
                     {'Thời gian'}
                   </Text>
                 </View>
-                <View style={{ width: '18%', alignItems: 'flex-start' }}>
+                <View style={{ width: '10%', alignItems: 'flex-start' }}>
                   <Text>
-                    {'Trạng thái'}
+                    {'Status'}
                   </Text>
                 </View>
-                <View style={{ width: '15%', alignItems: 'flex-start' }}>
+                <View style={{ width: '15%', alignItems: 'center', marginLeft: 10 }}>
                   <Text>
                     {'Chi tiết'}
                   </Text>
@@ -129,36 +120,44 @@ class ListPayment extends Component {
                 (this.state.listFood?.length > 0) ? this.state.listFood.map((item) => {
                   // console.log('item:', item)
                   return (
-                    <Item>
-                      <View style={{ flex: 1, flexDirection: 'row', height: '100%' }}>
-                        <View style={{ width: '15%' }} >
-                          <Text >
+                    <Item style={{ width: screenWidth, }}>
+                      <View style={{ flexDirection: 'row', width: screenWidth }}>
+                        <View style={{ width: '10%' }} >
+                          <Text numberOfLines={1} >
                             {item.table.name}
                           </Text>
                         </View>
 
-                        <View style={{ width: '15%', alignItems: 'center' }}>
+                        <View style={{ width: '15%', alignItems: 'center', }}>
                           <Text>
                             {item.total_money}
                           </Text>
                         </View>
-                        <View style={{ width: '15%', alignItems: 'center' }}>
-                          <Text>
-                            {item.updated_at}
+                        <View style={{ width: '30%', alignItems: 'center' }}>
+                          <Text style={{ fontSize: 12 }}>
+                            {moment(item.updated_at).format('DD-MM-YYYY, h:mm:ss a')}
                           </Text>
                         </View>
-                        <View style={{ width: '15%', alignItems: 'center' }}>
+                        <View style={{ width: '10%', alignItems: 'center', }}>
                           <Text>
                             {item.status}
                           </Text>
                         </View>
-                        <View style={{ width: '15%', alignItems: 'center' }}>
-                          <Text>
-                            {'chi tiết'}
-                          </Text>
+                        <View style={{ width: '15%', alignItems: 'center', }}>
+                          <TouchableOpacity onPress={() => {
+                            console.log('item', item)
+                            this.props.navigation.navigate('PaymentDetail', { bill_id: item.id, customer: item.customer.full_name })
+                          }}
+                            style={{}}
+                          >
+                            <Text style={{ fontSize: 12, textDecorationLine: 'underline', color: Colors.blueMain }}>
+                              {'Chi tiết'}
+                            </Text>
+                          </TouchableOpacity>
+
                         </View>
                         {item.status === 'OR' ?
-                          <View style={{ width: '15%', justifyContent: 'center', alignItems: 'flex-end' }}>
+                          <View style={{ width: '10%', justifyContent: 'center', alignItems: 'flex-end' }}>
                             <Button
                               buttonStyle={{ width: 20, height: 20, backgroundColor: '#ffffff', borderRadius: 15, padding: 0 }}
                               icon={
@@ -178,7 +177,7 @@ class ListPayment extends Component {
                           </View>
                           :
                           item.status === 'PR' ?
-                            <View style={{ width: '15%', justifyContent: 'center', alignItems: 'flex-end' }}>
+                            <View style={{ width: '10%', justifyContent: 'center', alignItems: 'flex-end' }}>
                               <Button
                                 buttonStyle={{ width: 20, height: 20, backgroundColor: '#ffffff', borderRadius: 15, padding: 0 }}
                                 icon={
@@ -253,7 +252,7 @@ class ListPayment extends Component {
                       status: this.state.status === 'OR' ? 'PR' : this.state.status === 'PR' ? 'PA' : ''
                     }
                   }
-
+                  console.log('payload:', JSON.stringify(payload))
                   this.state.client.send(JSON.stringify(payload))
                   this.setState({ openModal: false })
                 }}

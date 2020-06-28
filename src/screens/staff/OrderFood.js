@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, } from 'react-native';
-import { Tabs, Toast, Provider, ActivityIndicator } from '@ant-design/react-native';
+import { View, ActivityIndicator } from 'react-native';
+import { Tabs, Toast, Provider, } from '@ant-design/react-native';
 import ListFoods from '../general/ListFoods';
 import { connect } from 'react-redux';
 import WithLoading from '../../component/withLoading';

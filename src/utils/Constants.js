@@ -7,7 +7,8 @@
 import { Dimensions, Platform } from 'react-native';
 
 const Constants = {
-
+  screenWidth: Math.round(Dimensions.get('window').width),
+  screenHeight: Math.round(Dimensions.get('window').height),
   Dimension: {
     screenWidth: Math.round(Dimensions.get('window').width),
     screenHeight: Math.round(Dimensions.get('window').height),

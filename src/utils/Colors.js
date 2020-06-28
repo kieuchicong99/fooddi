@@ -9,4 +9,6 @@ export default {
   blackMain: '#363636',
   blackPlaceHolder: '#646464',
   white: '#FFFFFF',
+  blueMain: '#00A3FF',
+  yellowMain: '#f5e97f'
 };

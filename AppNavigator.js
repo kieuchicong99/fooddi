@@ -67,7 +67,7 @@ function PaymentStackScreen() {
           headerShown: false,
         }}></PaymentStack.Screen>
       <PaymentStack.Screen
-        name="Payment"
+        name="PaymentDetail"
         component={Payment}
         options={{
           headerShown: true,
@@ -122,24 +122,31 @@ const ChefStack = createStackNavigator();
 function ChefStackScreen() {
   return (
     <ChefStack.Navigator>
-      <ChefStack.Screen
+      {/* <ChefStack.Screen
         name="Chef"
         component={Chef}
         options={{
           headerShown: true,
-        }}></ChefStack.Screen>
+        }}></ChefStack.Screen> */}
       {/* <ChefStack.Screen
         name="Delivery"
         component={Delivery}
         options={{
           headerShown: true,
         }}></ChefStack.Screen> */}
-      {/* <ChefStack.Screen
-        name="Delivery"
+      <ChefStack.Screen
+        name="ListPayment"
         component={ListPayment}
         options={{
           headerShown: true,
-        }}></ChefStack.Screen> */}
+        }}></ChefStack.Screen>
+
+      <ChefStack.Screen
+        name="PaymentDetail"
+        component={Payment}
+        options={{
+          headerShown: true,
+        }}></ChefStack.Screen>
       {/* <ChefStack.Screen
         name="Delivery"
         component={Chart}

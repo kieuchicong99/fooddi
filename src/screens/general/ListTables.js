@@ -1,109 +1,119 @@
 import React, { Component } from 'react';
-import { ScrollView, View, Text, StyleSheet } from 'react-native';
-import { Button } from 'react-native-elements';
+import { View, Text, StyleSheet, StatusBar, FlatList, RefreshControl, ActivityIndicator } from 'react-native';
 import { List } from '@ant-design/react-native';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Colors from '../../utils/Colors'
+import {
+  Provider,
+} from '@ant-design/react-native'
+import Constants from '../../utils/Constants'
+const { screenWidth } = Constants;
+import axios from 'axios'
+const baseUrl = 'http://45.32.23.158:8000/api/tables'
+
 const Item = List.Item;
 const styles = StyleSheet.create({
   item: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
 });
 
-export default class ListTables extends Component {
+export default class listTables extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ListTables: [
-        { id: 1, name: 'Bàn số 1' },
-        { id: 2, name: 'Bàn số 2' },
-        { id: 3, name: 'Bàn số 3' },
-        { id: 4, name: 'Bàn số 4' },
-        { id: 5, name: 'Bàn số 5' },
-        { id: 6, name: 'Bàn số 6' },
-        { id: 7, name: 'Bàn số 7' },
-        { id: 8, name: 'Bàn số 8' },
-        { id: 9, name: 'Bàn số 9' },
-        { id: 10, name: 'Bàn số 10' },
+      isFetching: false,
+      refreshing: false,
+      listTables: [
 
       ],
     };
   }
+
+  async componentDidMount() {
+    this.setState({ isFetching: true })
+    await this.getStatusTables();
+
+  }
+
+  getStatusTables = async () => {
+    this.setState({ isFetching: true })
+    await axios.get(baseUrl).then(res => {
+      console.log('res:', res)
+      if (res?.data?.success) {
+        this.setState({ listTables: res.data.data })
+        this.setState({ isFetching: false })
+
+      }
+    })
+  }
   extraComponent = (props, table) => {
     return (
-      <View style={{ ...styles.item, width: '100%' }}>
-        <View style={{ width: '40%', alignItems: 'flex-end' }}>
-          <Button
-            buttonStyle={{
-              borderRadius: 30,
-              padding: 10,
-              paddingTop: 3,
-              paddingBottom: 3,
-              backgroundColor: '#ffffff'
-            }}
-            onPress={() => props.navigation.navigate('OrderFood')}
-            title=""
-            icon={<SimpleLineIcons name="note" size={20} color="#0099ff" style={{ marginRight: 5 }} />}
-          />
-        </View>
-        <View style={{ width: '10%' }} />
-        <View style={{ width: '50%', alignItems: 'flex-end' }}>
-          <Button
-            buttonStyle={{
-              borderRadius: 40,
-              padding: 15,
-              paddingTop: 4,
-              paddingBottom: 4,
-              backgroundColor: '',
-            }}
-            onPress={() => props.navigation.navigate('Payment', table)}
-            title=""
-            icon={<MaterialIcons name="payment" size={25} color="#35b043" style={{ marginRight: 5 }} />}
-          />
-        </View>
+      <View style={{ width: 110, alignItems: 'center', paddingVertical: 5, borderRadius: 20, backgroundColor: table.status === false ? Colors.greenMain : table.status === true ? Colors.blueMain : '' }}>
+        <Text style={{ color: Colors.white, textAlign: 'right' }}>
+          {table.status === true ? 'Còn trống' : 'Đang sử dụng'}
+        </Text>
       </View>
+
     );
   };
-  renderTable = (table, index) => {
-    return (
-      <Item disabled key={`${index}`}>
-        <View style={{ ...styles.item, alignItems: 'center' }}>
-          <Text
-            style={{
-              width: '30%',
-              minWidth: 100,
-              fontSize: 18,
-            }}
-          >
-            {table.name}
-          </Text>
-          <View style={{ width: '70%', minWidth: 100 }}>
-            {this.extraComponent(this.props, table)}
-          </View>
-        </View>
-      </Item>
-    );
-  }
+
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <ScrollView
-          style={{ backgroundColor: '#f5f5f9' }}
-          automaticallyAdjustContentInsets={false}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}>
-          <List renderHeader={'Danh sách bàn ăn'}>
-            {
-              this.state.ListTables.map((table, i) => this.renderTable(table, i))
-            }
+      <Provider>
+        <ActivityIndicator
+          size="large"
+          color={Colors.blackMain}
+          animating={this.state.isFetching}
+          style={{
+            backgroundColor: 'rgba(0, 166, 81, 0)',
+            position: 'absolute',
+            zIndex: 1000,
+            top: '40%',
+            left: '48%',
+          }}
+        />
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
+        <View style={{ height: 60, justifyContent: 'center', paddingHorizontal: 20, paddingTop: 15 }}>
+          <Text style={{ fontSize: 20 }}>
+            Trạng thái các bàn ăn
+        </Text>
+        </View>
 
-          </List>
-        </ScrollView>
-        <View />
-      </View>
+        <FlatList
+          data={this.state.listTables}
+          renderItem={({ item, index }) => <>
+            <Item disabled key={`${index}`} style={{ opacity: 0.85, backgroundColor: Colors.white }}>
+              <View style={{ ...styles.item, alignItems: 'center' }}>
+                <Text
+                  style={{
+                    width: 0.3 * screenWidth,
+                    minWidth: 100,
+                    fontSize: 16,
+                    color: Colors.blackMain
+                  }}
+                >
+                  {item.name}
+                </Text>
+                <View style={{ width: 0.6 * screenWidth, minWidth: 100, alignItems: 'flex-end' }}>
+                  {this.extraComponent(this.props, item)}
+                </View>
+              </View>
+            </Item>
+
+          </>
+          }
+          keyExtractor={item => item.id}
+          refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={() => {
+            this.getStatusTables()
+          }} />}
+        />
+
+      </Provider >
     );
   }
 }
