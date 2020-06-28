@@ -30,7 +30,7 @@ class ListPayment extends Component {
     this.onClose = () => {
       this.setState({
         openModal: false,
-        listFood: [],
+        listBill: [],
       });
 
     };
@@ -50,7 +50,9 @@ class ListPayment extends Component {
         });
       }
       else {
-
+        let data = JSON.parse(message.data)
+        let listBill = [...data.message];
+        this.setState({ listBill: listBill })
       }
     };
 
@@ -72,52 +74,53 @@ class ListPayment extends Component {
   render() {
     return (
       <Provider>
+        <Item style={{ width: screenWidth }} >
+          <View style={{ flexDirection: 'row', width: screenWidth }}>
+            <View style={{ width: '15%' }}>
+              <Text>
+                {'Bàn'}
+              </Text>
+            </View>
+            <View style={{ width: '15%', alignItems: 'flex-start', marginLeft: -10 }}>
+              <Text>
+                {'Số tiền'}
+              </Text>
+            </View>
+
+            <View style={{ width: '25%', alignItems: 'flex-start', marginLeft: 13 }}>
+              <Text>
+                {'Thời gian'}
+              </Text>
+            </View>
+            <View style={{ width: '10%', alignItems: 'flex-start', }}>
+              <Text>
+                {'Status'}
+              </Text>
+            </View>
+            <View style={{ width: '15%', alignItems: 'center', marginLeft: 5 }}>
+              <Text>
+                {'Chi tiết'}
+              </Text>
+            </View>
+            <View style={{ width: '15%', alignItems: 'flex-end', marginLeft: -10 }}>
+              <Text>
+                {'Submit'}
+              </Text>
+            </View>
+          </View>
+
+        </Item>
         <View style={{ flex: 1 }}>
           <ScrollView
             style={{ flex: 1, backgroundColor: '#f5f5f9' }}
           >
-            <Item style={{ width: screenWidth }} >
-              <View style={{ flexDirection: 'row', width: screenWidth }}>
-                <View style={{ width: '15%' }}>
-                  <Text>
-                    {'Bàn'}
-                  </Text>
-                </View>
-                <View style={{ width: '15%', alignItems: 'flex-start', marginLeft: -10 }}>
-                  <Text>
-                    {'Số tiền'}
-                  </Text>
-                </View>
 
-                <View style={{ width: '25%', alignItems: 'flex-start' }}>
-                  <Text>
-                    {'Thời gian'}
-                  </Text>
-                </View>
-                <View style={{ width: '10%', alignItems: 'flex-start' }}>
-                  <Text>
-                    {'Status'}
-                  </Text>
-                </View>
-                <View style={{ width: '15%', alignItems: 'center', marginLeft: 10 }}>
-                  <Text>
-                    {'Chi tiết'}
-                  </Text>
-                </View>
-                <View style={{ width: '15%', alignItems: 'flex-end' }}>
-                  <Text>
-                    {'Submit'}
-                  </Text>
-                </View>
-              </View>
-
-            </Item>
             <List
               renderHeader=''
               style={{ marginTop: 15, }}
             >
               {
-                (this.state.listFood?.length > 0) ? this.state.listFood.map((item) => {
+                (this.state.listBill?.length > 0) ? this.state.listBill.map((item) => {
                   // console.log('item:', item)
                   return (
                     <Item style={{ width: screenWidth, }}>
@@ -143,7 +146,7 @@ class ListPayment extends Component {
                             {item.status}
                           </Text>
                         </View>
-                        <View style={{ width: '15%', alignItems: 'center', }}>
+                        <View style={{ width: '15%', alignItems: 'center', marginLeft: 10 }}>
                           <TouchableOpacity onPress={() => {
                             console.log('item', item)
                             this.props.navigation.navigate('PaymentDetail', { bill_id: item.id, customer: item.customer.full_name })
@@ -212,7 +215,7 @@ class ListPayment extends Component {
         </View >
         <Modal
           style={{ width: '65%', height: '15%', minHeight: 120 }}
-          title={<Text style={{ textAlign: 'center', fontSize: 18 }}>{this.state.titleModal}</Text>}
+          title={<Text style={{ textAlign: 'center', fontSize: 18, marginTop: -10, color: Colors.blackMain }}>Xác nhận thanh toán</Text>}
           transparent
           onClose={
             () => {
@@ -222,44 +225,21 @@ class ListPayment extends Component {
           }
           visible={this.state.openModal}
           closable
-
         >
-          <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', marginVertical: 15 }}>
-            <View style={{ flexDirection: 'row', paddingVertical: 15, marginTop: 10 }}>
-              <View style={{ width: '30%', alignItems: 'flex-start' }}>
-                <Text style={{ fontSize: 16 }}>
-                  {this.state.table}
-                </Text>
-              </View>
-              <View style={{ width: '30%', alignItems: 'flex-end' }}>
-                <Text style={{ fontSize: 16 }}>
-                  {this.state.food}
-                </Text>
-              </View>
-              <View style={{ width: '30%', alignItems: 'flex-end' }}>
-                <Text style={{ fontSize: 16 }}>
-                  {this.state.amount}
-                </Text>
-              </View>
-            </View>
-
-            <View style={{ marginTop: 0 }}>
-              <ButtonCustom type='first' title='Xác nhận' buttonStyle={{ minHeight: 35 }}
-                onPress={() => {
-                  let payload = {
-                    data: {
-                      id: this.state.id,
-                      status: this.state.status === 'OR' ? 'PR' : this.state.status === 'PR' ? 'PA' : ''
-                    }
-                  }
-                  console.log('payload:', JSON.stringify(payload))
-                  this.state.client.send(JSON.stringify(payload))
-                  this.setState({ openModal: false })
-                }}
-              >
-              </ButtonCustom>
-            </View>
-          </View>
+          <ButtonCustom type='first' title='Thanh toán' buttonStyle={{ minHeight: 35, marginTop: 10, borderRadius: 10 }}
+            onPress={() => {
+              let payload = {
+                data: {
+                  id: this.state.id,
+                  status: this.state.status === 'OR' ? 'PR' : this.state.status === 'PR' ? 'PA' : ''
+                }
+              }
+              console.log('payload:', JSON.stringify(payload))
+              this.state.client.send(JSON.stringify(payload))
+              this.setState({ openModal: false })
+            }}
+          >
+          </ButtonCustom>
         </Modal>
       </Provider>
     );

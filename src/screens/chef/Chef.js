@@ -60,14 +60,7 @@ class Chef extends Component {
       else {
         let data = JSON.parse(message.data)
         let listFood = [...data.message];
-        listFood.map(item => {
-          // console.log('item:', item)
-          return { key: '0', item, }
-        })
-
-        // console.log('listFood:', listFood)
         this.setState({ listFood: listFood })
-        // console.log('this.state  =>:', this.state.listFood);
       }
     };
 
