@@ -23,7 +23,8 @@ import Delivery from './src/screens/staff/Delivery';
 import ListPayment from './src/screens/cashier/ListPayment';
 import Storage from './src/utils/storage'
 import Food from './src/screens/manager/Food';
-import Chart from './src/screens/manager/Chart';
+import BillChart from './src/screens/manager/BillChart';
+import MoneyChart from './src/screens/manager/MoneyChart';
 import ManagerDashboard from './src/screens/manager/ManagerDashboard';
 // import Chart from './src/screens/manager/Chart';
 export const Stack = createStackNavigator();
@@ -126,7 +127,7 @@ function UserStackScreen() {
         }}></UserStack.Screen> */}
       <UserStack.Screen
         name="Chart"
-        component={Chart}
+        component={BillChart}
         options={{
           headerShown: false,
         }}></UserStack.Screen>
