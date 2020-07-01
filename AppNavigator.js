@@ -24,6 +24,7 @@ import ListPayment from './src/screens/cashier/ListPayment';
 import Storage from './src/utils/storage'
 import Food from './src/screens/manager/Food';
 import Chart from './src/screens/manager/Chart';
+import ManagerDashboard from './src/screens/manager/ManagerDashboard';
 // import Chart from './src/screens/manager/Chart';
 export const Stack = createStackNavigator();
 const TabMenu = createBottomTabNavigator();
@@ -177,7 +178,7 @@ function HomeStackScreen() {
     <HomeStack.Navigator>
       <HomeStack.Screen
         name="Home"
-        component={HomeScreen}
+        component={ManagerDashboard}
         options={{
           headerShown: false,
         }}
