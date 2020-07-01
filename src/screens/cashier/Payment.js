@@ -25,16 +25,14 @@ const renderStatusPayment = (customer, statusPayment) => {
         <View style=
           {{
             maxWidth: '30%',
-            borderWidth: 1,
-            borderColor: Colors.grayDarkMain,
             backgroundColor: statusPayment === 'PR' ? Colors.yellowMain : statusPayment === 'OR' ? Colors.redMain : Colors.white,
             borderRadius: 10,
             height: 25,
             justifyContent: 'center',
             paddingHorizontal: 5
           }}>
-          <Text style={{ fontSize: 12, color: statusPayment === 'PR' ? Colors.blackMain : statusPayment === 'OR' ? Colors.white : Colors.blackMain }}>
-            {statusPayment === 'OR' ? 'Chưa thanh toán ' : statusPayment === 'PR' ? 'Chờ thanh toán' : ''}
+          <Text style={{ fontSize: 12, color: statusPayment === 'PA' ? Colors.greenMain : statusPayment === 'PR' ? Colors.blackMain : statusPayment === 'OR' ? Colors.white : Colors.blackMain }}>
+            {statusPayment === 'OR' ? 'Chưa thanh toán ' : statusPayment === 'PR' ? 'Chờ thanh toán' : statusPayment === 'PA' ? 'Đã thanh toán' : ''}
           </Text>
         </View>
 
@@ -46,7 +44,7 @@ const renderStatusPayment = (customer, statusPayment) => {
           </Text>
         </View>
         <View style={{ width: '28%', justifyContent: "center", alignItems: 'flex-end', marginTop: 5 }}>
-          <Text style={{ fontSize: 16 }}>Trạng thái:</Text>
+          <Text style={{ fontSize: 16 }}>Trạng thái  </Text>
         </View>
 
       </View>
@@ -228,7 +226,7 @@ export default class Payment extends React.Component {
           </Text>
         </View>
         <Button
-          style={{ marginBottom: 15, marginTop: 5 }}
+          style={{ marginBottom: 15, marginTop: 5, display: this.state.statusPayment === 'OR' ? 'flex' : 'none' }}
           type="primary"
           onPress={() => {
             let payload = {
@@ -240,7 +238,7 @@ export default class Payment extends React.Component {
             console.log('payload:', payload)
             this.state.client.send(JSON.stringify(payload))
           }}>
-          Gửi yêu cầu thanh toán
+          {this.state.statusPayment === 'OR' ? 'Gửi yêu cầu thanh toán' : ''}
         </Button>
 
       </Provider>

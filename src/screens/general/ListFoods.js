@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 class ListFoods extends Component {
   constructor(props) {
     super(props);
-    this.state = { a: '', visible2: false, cart: false, epandShopingCart: false, choosingFood: [], totalFee: 0 };
+    this.state = { a: '', visible2: false, cart: false, epandShopingCart: false, choosingFood: [], totalFee: 0, itemImage: '' };
     this.onClose2 = () => {
       this.setState({
         visible2: false,
@@ -110,11 +110,11 @@ class ListFoods extends Component {
           <TouchableOpacity onPress={
             () => {
               console.log('hello');
-              this.setState({ visible2: true });
+              this.setState({ visible2: true, itemImage: food.img });
             }
           }>
             <ImageBackground
-              source={{ uri: 'https://cdn3.iconfinder.com/data/icons/bbq-grilling-and-tail-gating/50/48-512.png' }}
+              source={{ uri: food.img }}
               style={foodImageStyle ? foodImageStyle : styles.food_img}
             />
           </TouchableOpacity>
@@ -165,7 +165,7 @@ class ListFoods extends Component {
           <TouchableOpacity onPress={this.onClose2}>
             <View style={{ height: '100%', width: '100%' }}>
               <ImageBackground
-                source={{ uri: 'https://cdn3.iconfinder.com/data/icons/bbq-grilling-and-tail-gating/50/48-512.png' }}
+                source={{ uri: this.state.itemImage }}
                 style={{ height: '100%', width: '100%', resizeMode: 'cover' }}
               />
             </View>

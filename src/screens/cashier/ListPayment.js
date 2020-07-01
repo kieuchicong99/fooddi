@@ -89,7 +89,7 @@ class ListPayment extends Component {
 
             <View style={{ width: '25%', alignItems: 'flex-start', marginLeft: 13 }}>
               <Text>
-                {'Thời gian'}
+                {'Tên KH'}
               </Text>
             </View>
             <View style={{ width: '10%', alignItems: 'flex-start', }}>
@@ -137,12 +137,17 @@ class ListPayment extends Component {
                           </Text>
                         </View>
                         <View style={{ width: '30%', alignItems: 'center' }}>
-                          <Text style={{ fontSize: 12 }}>
-                            {moment(item.updated_at).format('DD-MM-YYYY, h:mm:ss a')}
+
+
+                          <Text numberOfLines={1}>
+                            {/* {moment(item.updated_at).format('DD-MM-YYYY, h:mm:ss a')} */}
+                            {item.customer.full_name}
                           </Text>
+
+
                         </View>
-                        <View style={{ width: '10%', alignItems: 'center', }}>
-                          <Text>
+                        <View style={{ justifyContent: 'center', width: '10%', alignItems: 'center', borderRadius: 10, backgroundColor: item.status === 'PA' ? Colors.greenMain : item.status === 'PR' ? Colors.yellowMain : item.status === 'OR' ? Colors.redMain : Colors.white }}>
+                          <Text style={{ color: Colors.white, fontSize: 12 }} >
                             {item.status}
                           </Text>
                         </View>

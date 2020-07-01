@@ -69,7 +69,7 @@ export const API_URLS = {
 
     getTables: () => {
       return {
-        endPoint: `/api/tables`,
+        endPoint: `/api/tables?status=True`,
         method: 'GET',
         headers: HEADERS.header(),
         name: 'GET_TABLE_BILL',
