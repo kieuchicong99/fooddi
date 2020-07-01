@@ -54,6 +54,41 @@ export const API_URLS = {
 
   },
 
+  FOOD: {
+    getFoods: () => {
+      return {
+        endPoint: `/api/foods`,
+        method: 'GET',
+        headers: HEADERS.header(),
+        name: 'GET_FOODS',
+      };
+    },
+    insertFood: (payload) => ({
+      endPoint: '/api/foods/',
+      method: 'POST',
+      headers: HEADERS.jsonHeader(),
+      name: 'ADD_FOOD',
+      payload,
+    }),
+    updateFood: (foodid, payload) => {
+      console.log("api => payload:", payload)
+      console.log("api => foodid:", foodid)
+      return {
+        endPoint: `/api/foods/${foodid}`,
+        method: 'PUT',
+        headers: HEADERS.jsonHeader(),
+        name: 'EDIT_FOOD',
+        payload,
+      }
+    },
+    deleteFood: (foodid) => ({
+      endPoint: `/api/foods/${foodid}`,
+      method: 'DELETE',
+      headers: HEADERS.header(),
+      name: 'DELETE_FOOD',
+    }),
+
+  },
   //BILL
   BILL: {
     createCustomer: (payload) => {

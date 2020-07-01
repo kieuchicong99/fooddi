@@ -22,6 +22,7 @@ import ProfileDetail from './src/screens/login/ProfileDetail'
 import Delivery from './src/screens/staff/Delivery';
 import ListPayment from './src/screens/cashier/ListPayment';
 import Storage from './src/utils/storage'
+import Food from './src/screens/manager/Food';
 // import Chart from './src/screens/manager/Chart';
 export const Stack = createStackNavigator();
 const TabMenu = createBottomTabNavigator();
@@ -108,9 +109,16 @@ const UserStack = createStackNavigator();
 function UserStackScreen() {
   return (
     <UserStack.Navigator>
-      <UserStack.Screen
+      {/* <UserStack.Screen
         name="User"
         component={User}
+        options={{
+          headerShown: false,
+        }}></UserStack.Screen> */}
+
+      <UserStack.Screen
+        name="Food"
+        component={Food}
         options={{
           headerShown: false,
         }}></UserStack.Screen>
