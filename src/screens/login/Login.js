@@ -161,9 +161,26 @@ export default class Login extends Component {
                         console.log('res:', res);
                         if (res.status === 200 && res.data.success === true) {
                           Storage.setItem('user', res.data.data);
+                          let users = res.data.data;
                           console.log('user:', res.data.data.full_name);
                           Toast.success(`Đăng nhập thành công\n Xin chào ${res.data.data.full_name}`, 0.5, () => {
-                            this.props.navigation.navigate('AfterLogin', { user: res.data.data })
+                            switch (users.office) {
+                              case 1:
+                                this.props.navigation.navigate('AfterLoginOfManager', { user: res.data.data });
+                                break;
+                              case 2:
+                                this.props.navigation.navigate('AfterLoginOfChef', { user: res.data.data });
+                                break;
+                              case 3:
+                                this.props.navigation.navigate('AfterLoginOfCashier', { user: res.data.data });
+                                break;
+                              case 4:
+                                this.props.navigation.navigate('AfterLoginOfServant', { user: res.data.data });
+                                break;
+                              default:
+                                break;
+                            }
+
                           });
                         }
                       })

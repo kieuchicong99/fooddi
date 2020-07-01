@@ -65,17 +65,19 @@ function PaymentStackScreen() {
   return (
     <PaymentStack.Navigator>
       <PaymentStack.Screen
-        name="ListTables"
-        component={ListTables}
+        name="ListPayment"
+        component={ListPayment}
         options={{
           headerShown: false,
-        }}></PaymentStack.Screen>
+        }}>
+      </PaymentStack.Screen>
       <PaymentStack.Screen
         name="PaymentDetail"
         component={Payment}
         options={{
           headerShown: true,
-        }}></PaymentStack.Screen>
+        }}>
+      </PaymentStack.Screen>
     </PaymentStack.Navigator>
   );
 }
@@ -112,12 +114,12 @@ const UserStack = createStackNavigator();
 function UserStackScreen() {
   return (
     <UserStack.Navigator>
-      {/* <UserStack.Screen
+      <UserStack.Screen
         name="User"
         component={User}
         options={{
           headerShown: false,
-        }}></UserStack.Screen> */}
+        }}></UserStack.Screen>
       {/* 
       <UserStack.Screen
         name="Food"
@@ -132,6 +134,27 @@ function UserStackScreen() {
           headerShown: false,
         }}></UserStack.Screen>
     </UserStack.Navigator>
+  );
+}
+
+const FoodStack = createStackNavigator();
+function FoodStackScreen() {
+  return (
+    <FoodStack.Navigator>
+      <FoodStack.Screen
+        name="FoodManage"
+        component={Food}
+        options={{
+          headerShown: false,
+        }}></FoodStack.Screen>
+
+      {/* <FoodStack.Screen
+        name="FoodGroup"
+        component={}
+        options={{
+          headerShown: false,
+        }}></FoodStack.Screen> */}
+    </FoodStack.Navigator>
   );
 }
 
@@ -184,16 +207,13 @@ function HomeStackScreen() {
           headerShown: false,
         }}
       />
-      <HomeStack.Screen
-        name="Details"
-        component={DetailsScreen}
-        options={{
-          headerStyle: {},
-        }}
-      />
+
     </HomeStack.Navigator>
   );
 }
+
+
+
 
 const SettingsStack = createStackNavigator();
 
@@ -581,43 +601,79 @@ class AfterLoginOfCashier extends React.Component {
   }
 }
 
+
+function ManagerHomeStackScreen() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen
+        name="ManagerDashboard"
+        component={ManagerDashboard}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <HomeStack.Screen
+        name="BillChart"
+        component={BillChart}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <HomeStack.Screen
+        name="MoneyChart"
+        component={MoneyChart}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <HomeStack.Screen
+        name="TableStatus"
+        component={ListTables}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+    </HomeStack.Navigator>
+  );
+}
+
 class AfterLoginOfManager extends React.Component {
   render() {
     return (
       <TabMenu.Navigator>
-        {/* <TabMenu.Screen
+        <TabMenu.Screen
           name="Home"
-          component={HomeStackScreen}
+          component={ManagerHomeStackScreen}
           options={{
             tabBarLabel: 'Home',
             tabBarIcon: ({ focused, horizontal, tintColor }) => {
               return <Icon name="home" size={30} color="#69c3e0" />;
             },
           }}
-        /> */}
-        {/* <TabMenu.Screen
-          name="Food"
-          component={ListFoods}
+        />
+        <TabMenu.Screen
+          name="UserManage"
+          component={UserStackScreen}
           options={{
-            tabBarLabel: 'Food',
+            tabBarLabel: 'UserManage',
             tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return (
-                <MaterialCommunityIcons name="food" size={30} color="#69c3e0" />
-              );
+              return <Icon name="addusergroup" size={30} color="#69c3e0" />;
             },
           }}
-        /> */}
-        {/* <TabMenu.Screen
-          name="OrderFood"
-          component={OrderStackScreen}
+        />
+        <TabMenu.Screen
+          name="FoodManage"
+          component={FoodStackScreen}
           options={{
-            tabBarLabel: 'Order',
+            tabBarLabel: 'FoodManage',
             tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <SimpleLineIcons name="note" size={30} color="#69c3e0" />;
+              return <MaterialCommunityIcons name="food" size={30} color="#69c3e0" />;
             },
           }}
-        /> */}
-        {/* <TabMenu.Screen
+        />
+
+        <TabMenu.Screen
           name="Payment"
           component={PaymentStackScreen}
           options={{
@@ -626,7 +682,7 @@ class AfterLoginOfManager extends React.Component {
               return <MaterialIcons name="payment" size={30} color="#69c3e0" />;
             },
           }}
-        /> */}
+        />
         <TabMenu.Screen
           name="Settings"
           component={SettingsStackScreen}
@@ -637,29 +693,6 @@ class AfterLoginOfManager extends React.Component {
             },
           }}
         />
-
-        {/* <TabMenu.Screen
-          name="UserManage"
-          component={UserStackScreen}
-          options={{
-            tabBarLabel: 'UserManage',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <Icon name="addusergroup" size={30} color="#69c3e0" />;
-            },
-          }}
-        /> */}
-
-        <TabMenu.Screen
-          name="ChefManage"
-          component={ChefStackScreen}
-          options={{
-            tabBarLabel: 'ChefManage',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <Icon name="carryout" size={30} color="#69c3e0" />;
-            },
-          }}
-        />
-
 
       </TabMenu.Navigator>
     );
@@ -699,11 +732,67 @@ export class AppNavigator extends React.Component {
               },
             }}
           /> */}
-          <Stack.Screen
+          {/* <Stack.Screen
             name="AfterLogin"
             component={
-              // office === 4 ? AfterLoginOfServant : office === 3 ? AfterLoginOfChef : office === 2 ? AfterLoginOfCashier : office === 1 ? AfterLoginOfManager :
-              AfterLogin
+              office === 4 ? AfterLoginOfServant : office === 3 ? AfterLoginOfChef : office === 2 ? AfterLoginOfCashier : office === 1 ? AfterLoginOfManager :
+                Login
+            }
+            options={{
+              title: null,
+              headerStyle: {
+                height: 0,
+              },
+              headerShown: false,
+            }}
+          /> */}
+
+          <Stack.Screen
+            name="AfterLoginOfManager"
+            component={
+              AfterLoginOfManager
+            }
+            options={{
+              title: null,
+              headerStyle: {
+                height: 0,
+              },
+              headerShown: false,
+            }}
+          />
+
+          <Stack.Screen
+            name="AfterLoginOfCashier"
+            component={
+              AfterLoginOfCashier
+            }
+            options={{
+              title: null,
+              headerStyle: {
+                height: 0,
+              },
+              headerShown: false,
+            }}
+          />
+
+          <Stack.Screen
+            name="AfterLoginOfChef"
+            component={
+              AfterLoginOfChef
+            }
+            options={{
+              title: null,
+              headerStyle: {
+                height: 0,
+              },
+              headerShown: false,
+            }}
+          />
+
+          <Stack.Screen
+            name="AfterLoginOfServant"
+            component={
+              AfterLoginOfServant
             }
             options={{
               title: null,

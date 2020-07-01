@@ -5,11 +5,12 @@ import {
   Text,
   View,
   StatusBar,
-  processColor
+  processColor,
+  TouchableOpacity
 } from 'react-native';
 import moment from 'moment'
 import axios from 'axios'
-
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import { LineChart, BarChart } from 'react-native-charts-wrapper';
 const styles = StyleSheet.create({
   container: {
@@ -50,6 +51,10 @@ export default class MoneyChart extends Component {
           dataSets: [{
             label: "Doanh thu 1 ngày",
             values: temp1,
+            config: {
+              textSize: 14,
+              color: processColor('teal'),
+            }
           }],
         },
         dataX: {
@@ -81,11 +86,24 @@ export default class MoneyChart extends Component {
           },
           shadowOpacity: 0.25,
           shadowRadius: 3.84,
-
           elevation: 5,
 
+          flexDirection: 'row',
+          width: screenWidth
+
         }}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Biểu đồ doanh thu</Text>
+          <View style={{ width: 30 }}>
+            <TouchableOpacity
+              style={{ width: 30, height: 30 }}
+              onPress={() => {
+                this.props.navigation.navigate('ManagerDashboard')
+              }}>
+              <AntDesignIcon name="left" size={25} color={Colors.blackMain} />
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: screenWidth - 30, alignItems: 'center' }}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Biểu đồ doanh thu</Text>
+          </View>
         </View>
         <View style={{ flex: 1, marginVertical: 10 }}>
 

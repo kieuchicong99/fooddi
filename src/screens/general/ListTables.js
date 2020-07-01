@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, StatusBar, FlatList, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, FlatList, RefreshControl, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { List } from '@ant-design/react-native';
 import Colors from '../../utils/Colors'
 import {
   Provider,
 } from '@ant-design/react-native'
 import Constants from '../../utils/Constants'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 const { screenWidth } = Constants;
 import axios from 'axios'
 const baseUrl = 'http://45.32.23.158:8000/api/tables'
@@ -78,11 +79,23 @@ export default class listTables extends Component {
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        <View style={{ height: 60, justifyContent: 'center', paddingHorizontal: 20, paddingTop: 15 }}>
-          <Text style={{ fontSize: 20 }}>
-            Trạng thái các bàn ăn
+        <View style={{ flexDirection: 'row', height: 70 }}>
+          <View style={{ width: 30, paddingLeft: 15, paddingTop: 15, height: 60, justifyContent: 'center' }}>
+            <TouchableOpacity
+              style={{ width: 30, height: 30 }}
+              onPress={() => {
+                this.props.navigation.navigate('ManagerDashboard')
+              }}>
+              <AntDesignIcon name="left" size={25} color={Colors.blackMain} />
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: screenWidth - 30, height: 60, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20, paddingTop: 15 }}>
+            <Text style={{ fontSize: 18 }}>
+              Trạng thái các bàn ăn
         </Text>
+          </View>
         </View>
+
 
         <FlatList
           data={this.state.listTables}

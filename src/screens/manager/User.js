@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView, FlatList, RefreshControl, StatusBar } from 'react-native'
+import { View, Text, StyleSheet, TextInput, ScrollView, FlatList, RefreshControl, StatusBar, TouchableOpacity } from 'react-native'
 import { Table, Row, Rows } from 'react-native-table-component';
 import { Button } from 'react-native-elements';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -12,10 +12,10 @@ import {
 import WithLoading from '../../component/withLoading';
 import { connect } from 'react-redux';
 import { actions as userActions } from '../../redux/userRedux';
-// import { FlatList } from 'react-native-gesture-handler';
-
+import Colors from '../../utils/Colors'
 const { getUsers, updateUser, insertUser, deleteUser } = userActions;
-
+import { Dimensions } from "react-native";
+const screenWidth = Dimensions.get("window").width;
 class User extends Component {
   constructor(props) {
     super(props);
@@ -165,13 +165,23 @@ class User extends Component {
           barStyle="dark-content"
         />
         <FlatList
+          style={{ backgroundColor: Colors.white }}
           data={[1]}
           renderItem={({ item }) => <>
-            <View style={{ flexDirection: 'row', padding: 10, marginTop: 20 }}>
-              <View style={{ fontSize: 18, width: '60%' }}>
-                <Text style={{ fontSize: 18, textTransform: 'uppercase' }}>Danh sách người dùng</Text>
+            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 25, height: 70, paddingBottom: 0, backgroundColor: Colors.grayLightMain }}>
+              <View style={{ width: 30 }}>
+                <TouchableOpacity
+                  style={{ width: 30, height: 30 }}
+                  onPress={() => {
+                    this.props.navigation.navigate('ManagerDashboard')
+                  }}>
+                  <AntIcon name="left" size={25} color={Colors.blackMain} />
+                </TouchableOpacity>
               </View>
-              <View style={{ width: '40%', alignItems: 'flex-end' }}>
+              <View style={{ fontSize: 18, width: screenWidth * 0.6 - 50 }}>
+                <Text style={{ fontSize: 18 }}>Danh sách người dùng</Text>
+              </View>
+              <View style={{ width: 0.4 * screenWidth, alignItems: 'flex-end' }}>
                 <Button
                   buttonStyle={{ width: 120, height: 30, borderRadius: 15, padding: 15, paddingTop: 10, paddingBottom: 10, marginBottom: 15 }}
                   title='Thêm'

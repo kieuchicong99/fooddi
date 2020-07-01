@@ -74,6 +74,22 @@ class ListPayment extends Component {
   render() {
     return (
       <Provider>
+        <View style={{ flexDirection: 'row', padding: 10, marginTop: 20, width: screenWidth }}>
+          <View style={{ width: 30 }}>
+            <TouchableOpacity
+              style={{ width: 30, height: 30 }}
+              onPress={() => {
+                this.props.navigation.navigate('ManagerDashboard')
+              }}>
+              <AntIcon name="left" size={25} color={Colors.blackMain} />
+            </TouchableOpacity>
+          </View>
+          <View style={{ fontSize: 18, width: screenWidth - 30, alignItems: 'center' }}>
+            <Text style={{ fontSize: 18, }}>Danh sách đơn</Text>
+          </View>
+
+        </View>
+
         <Item style={{ width: screenWidth }} >
           <View style={{ flexDirection: 'row', width: screenWidth }}>
             <View style={{ width: '15%' }}>

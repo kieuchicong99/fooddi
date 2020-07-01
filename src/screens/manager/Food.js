@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView, FlatList, RefreshControl, StatusBar, Image } from 'react-native'
+import { View, Text, StyleSheet, TextInput, ScrollView, FlatList, RefreshControl, StatusBar, Image, TouchableOpacity } from 'react-native'
 import { Table, Row, Rows } from 'react-native-table-component';
 import { Button } from 'react-native-elements';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -12,10 +12,11 @@ import {
 import WithLoading from '../../component/withLoading';
 import { connect } from 'react-redux';
 import { actions as foodActions } from '../../redux/foodRedux';
-// import { FlatList } from 'react-native-gesture-handler';
-
 const { getFoods, updateFood, insertFood, deleteFood } = foodActions;
 
+import Colors from '../../utils/Colors'
+import { Dimensions } from "react-native";
+const screenWidth = Dimensions.get("window").width;
 class Food extends Component {
   constructor(props) {
     super(props);
@@ -179,9 +180,18 @@ class Food extends Component {
           backgroundColor="transparent"
           barStyle="dark-content"
         />
-        <View style={{ flexDirection: 'row', padding: 10, marginTop: 20 }}>
-          <View style={{ fontSize: 18, width: '60%' }}>
-            <Text style={{ fontSize: 18, textTransform: 'uppercase' }}>Danh sách món ăn</Text>
+        <View style={{ flexDirection: 'row', padding: 10, marginTop: 20, width: screenWidth }}>
+          <View style={{ width: 30 }}>
+            <TouchableOpacity
+              style={{ width: 30, height: 30 }}
+              onPress={() => {
+                this.props.navigation.navigate('ManagerDashboard')
+              }}>
+              <AntIcon name="left" size={25} color={Colors.blackMain} />
+            </TouchableOpacity>
+          </View>
+          <View style={{ fontSize: 18, width: screenWidth * 0.6 - 30 }}>
+            <Text style={{ fontSize: 18, }}>Danh sách món ăn</Text>
           </View>
           <View style={{ width: '40%', alignItems: 'flex-end' }}>
             <Button

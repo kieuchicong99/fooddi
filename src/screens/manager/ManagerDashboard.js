@@ -75,6 +75,7 @@ export default class ManagerDashboard extends Component {
   }
 
   render() {
+    const {navigate} = this.props.navigation;
     return (
       <View style={{ height: screenHeight }}>
         <StatusBar
@@ -125,35 +126,55 @@ export default class ManagerDashboard extends Component {
             style={{ flex: 1, backgroundColor: '#f5f5f9' }}
           >
             <List renderHeader={'Người dùng'}>
-              <Item disabled arrow="horizontal" thumb={<AntDesin name='team' size={20} style={{ paddingRight: 10 }} />} onPress={() => { }}>
+              <Item disabled arrow="horizontal" thumb={<AntDesin name='team' size={20} style={{ paddingRight: 10 }} />} 
+              
+              onPress={() => {
+                navigate('UserManage')
+               }}>
                 Quản lý người dùng
               </Item>
             </List>
 
             <List renderHeader={'Thống kê báo cáo'}>
-              <Item disabled arrow="horizontal" thumb={<AntDesin name='barchart' size={20} style={{ paddingRight: 10 }} />} onPress={() => { }}>
+              <Item disabled arrow="horizontal" thumb={<AntDesin name='barchart' size={20} style={{ paddingRight: 10 }} />} 
+              onPress={() => { 
+                navigate('MoneyChart')
+              }}>
                 Biểu đồ doanh thu
               </Item>
 
-              <Item disabled arrow="horizontal" thumb={<AntDesin name='dotchart' size={20} style={{ paddingRight: 10 }} />} onPress={() => { }}>
+              <Item disabled arrow="horizontal" thumb={<AntDesin name='dotchart' size={20} style={{ paddingRight: 10 }} />} 
+              onPress={() => {
+                navigate('BillChart')
+               }}>
                 Biểu đồ số lượng khách
+                
               </Item>
             </List>
 
             <List renderHeader={'Quản lý đơn'}>
-              <Item disabled arrow="horizontal" thumb={<AntDesin name='carryout' size={20} style={{ paddingRight: 10 }} />} onPress={() => { }}>
+              <Item disabled arrow="horizontal" thumb={<AntDesin name='carryout' size={20} style={{ paddingRight: 10 }} />} 
+              onPress={() => { 
+                navigate('Payment')
+              }}>
                 Danh sách các hóa đơn
               </Item>
             </List>
 
             <List renderHeader={'Quản lý bàn'}>
-              <Item disabled arrow="horizontal" thumb={<AntDesin name='tag' size={20} style={{ paddingRight: 10 }} />} onPress={() => { }}>
+              <Item disabled arrow="horizontal" thumb={<AntDesin name='tag' size={20} style={{ paddingRight: 10 }} />} 
+              onPress={() => { 
+                navigate('TableStatus')
+              }}>
                 Trạng thái các bàn ăn
               </Item>
             </List>
 
             <List renderHeader={'Quản lý món ăn'}>
-              <Item disabled arrow="horizontal" thumb={<MaterialCommunity name='food' size={30} style={{ paddingRight: 10 }} />} onPress={() => { }}>
+              <Item disabled arrow="horizontal" thumb={<MaterialCommunity name='food' size={30} style={{ paddingRight: 10 }} />} 
+              onPress={() => {
+                navigate('FoodManage')
+               }}>
                 Quản lý các món ăn
               </Item>
             </List>
