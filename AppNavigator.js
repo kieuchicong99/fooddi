@@ -23,6 +23,7 @@ import Delivery from './src/screens/staff/Delivery';
 import ListPayment from './src/screens/cashier/ListPayment';
 import Storage from './src/utils/storage'
 import Food from './src/screens/manager/Food';
+import Chart from './src/screens/manager/Chart';
 // import Chart from './src/screens/manager/Chart';
 export const Stack = createStackNavigator();
 const TabMenu = createBottomTabNavigator();
@@ -115,10 +116,16 @@ function UserStackScreen() {
         options={{
           headerShown: false,
         }}></UserStack.Screen> */}
-
+      {/* 
       <UserStack.Screen
         name="Food"
         component={Food}
+        options={{
+          headerShown: false,
+        }}></UserStack.Screen> */}
+      <UserStack.Screen
+        name="Chart"
+        component={Chart}
         options={{
           headerShown: false,
         }}></UserStack.Screen>
