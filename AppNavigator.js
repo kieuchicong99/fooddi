@@ -22,12 +22,15 @@ import ProfileDetail from './src/screens/login/ProfileDetail'
 import Delivery from './src/screens/staff/Delivery';
 import ListPayment from './src/screens/manager/ListPayment';
 import StaffListPayment from './src/screens/staff/ListPayment';
+import CashierListPayment from './src/screens/cashier/ListPayment';
 import Storage from './src/utils/storage'
 import Food from './src/screens/manager/Food';
 import BillChart from './src/screens/manager/BillChart';
 import MoneyChart from './src/screens/manager/MoneyChart';
 import ManagerDashboard from './src/screens/manager/ManagerDashboard';
 import StaffDashboard from './src/screens/staff/StaffDashboard';
+import ChefDashboard from './src/screens/chef/ChefDashboard';
+import CashierDashboard from './src/screens/cashier/CashierDashboard';
 export const Stack = createStackNavigator();
 const TabMenu = createBottomTabNavigator();
 
@@ -109,37 +112,14 @@ const ChefStack = createStackNavigator();
 function ChefStackScreen() {
   return (
     <ChefStack.Navigator>
-      {/* <ChefStack.Screen
+      <ChefStack.Screen
         name="Chef"
         component={Chef}
         options={{
           headerShown: true,
-        }}></ChefStack.Screen> */}
-      {/* <ChefStack.Screen
-        name="Delivery"
-        component={Delivery}
-        options={{
-          headerShown: true,
-        }}></ChefStack.Screen> */}
-      <ChefStack.Screen
-        name="ListPayment"
-        component={ListPayment}
-        options={{
-          headerShown: true,
         }}></ChefStack.Screen>
 
-      <ChefStack.Screen
-        name="PaymentDetail"
-        component={Payment}
-        options={{
-          headerShown: true,
-        }}></ChefStack.Screen>
-      {/* <ChefStack.Screen
-        name="Delivery"
-        component={Chart}
-        options={{
-          headerShown: true,
-        }}></ChefStack.Screen> */}
+
     </ChefStack.Navigator>
   );
 }
@@ -460,52 +440,42 @@ class AfterLoginOfServant extends React.Component {
   }
 }
 
+function ChefHomeStackScreen() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen
+        name="ChefDashboard"
+        component={ChefDashboard}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <HomeStack.Screen
+        name="FoodOrdered"
+        component={Chef}
+        options={{
+          headerShown: false,
+        }}></HomeStack.Screen>
+
+    </HomeStack.Navigator>
+  );
+}
+
 class AfterLoginOfChef extends React.Component {
   render() {
     return (
       <TabMenu.Navigator>
-        {/* <TabMenu.Screen
+        <TabMenu.Screen
           name="Home"
-          component={HomeStackScreen}
+          component={ChefHomeStackScreen}
           options={{
             tabBarLabel: 'Home',
             tabBarIcon: ({ focused, horizontal, tintColor }) => {
               return <Icon name="home" size={30} color="#69c3e0" />;
             },
           }}
-        /> */}
-        {/* <TabMenu.Screen
-          name="Food"
-          component={ListFoods}
-          options={{
-            tabBarLabel: 'Food',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return (
-                <MaterialCommunityIcons name="food" size={30} color="#69c3e0" />
-              );
-            },
-          }}
-        /> */}
-        {/* <TabMenu.Screen
-          name="OrderFood"
-          component={OrderStackScreen}
-          options={{
-            tabBarLabel: 'Order',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <SimpleLineIcons name="note" size={30} color="#69c3e0" />;
-            },
-          }}
-        /> */}
-        {/* <TabMenu.Screen
-          name="Payment"
-          component={PaymentStackScreen}
-          options={{
-            tabBarLabel: 'Payment',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <MaterialIcons name="payment" size={30} color="#69c3e0" />;
-            },
-          }}
-        /> */}
+        />
+
         <TabMenu.Screen
           name="Settings"
           component={SettingsStackScreen}
@@ -518,21 +488,10 @@ class AfterLoginOfChef extends React.Component {
         />
 
         <TabMenu.Screen
-          name="UserManage"
-          component={UserStackScreen}
-          options={{
-            tabBarLabel: 'UserManage',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <Icon name="addusergroup" size={30} color="#69c3e0" />;
-            },
-          }}
-        />
-
-        <TabMenu.Screen
-          name="ChefManage"
+          name="Chef"
           component={ChefStackScreen}
           options={{
-            tabBarLabel: 'ChefManage',
+            tabBarLabel: 'Chef',
             tabBarIcon: ({ focused, horizontal, tintColor }) => {
               return <Icon name="carryout" size={30} color="#69c3e0" />;
             },
@@ -545,52 +504,71 @@ class AfterLoginOfChef extends React.Component {
   }
 }
 
+function CashierHomeStackScreen() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen
+        name="CashierDashboard"
+        component={CashierDashboard}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <HomeStack.Screen
+        name="PaymentStackScreen"
+        component={PaymentStackScreen}
+        options={{
+          headerShown: false,
+        }}></HomeStack.Screen>
+
+    </HomeStack.Navigator>
+  );
+}
+
+function CashierPaymentStackScreen() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen
+        name="ListPayment"
+        component={CashierListPayment}
+        options={{
+          headerShown: false,
+        }}>
+      </HomeStack.Screen>
+      <HomeStack.Screen
+        name="PaymentDetail"
+        component={Payment}
+        options={{
+          headerShown: true,
+        }}>
+      </HomeStack.Screen>
+    </HomeStack.Navigator>
+  );
+}
 class AfterLoginOfCashier extends React.Component {
   render() {
     return (
       <TabMenu.Navigator>
-        {/* <TabMenu.Screen
+        <TabMenu.Screen
           name="Home"
-          component={HomeStackScreen}
+          component={CashierHomeStackScreen}
           options={{
             tabBarLabel: 'Home',
             tabBarIcon: ({ focused, horizontal, tintColor }) => {
               return <Icon name="home" size={30} color="#69c3e0" />;
             },
           }}
-        /> */}
-        {/* <TabMenu.Screen
-          name="Food"
-          component={ListFoods}
-          options={{
-            tabBarLabel: 'Food',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return (
-                <MaterialCommunityIcons name="food" size={30} color="#69c3e0" />
-              );
-            },
-          }}
-        /> */}
-        {/* <TabMenu.Screen
-          name="OrderFood"
-          component={OrderStackScreen}
-          options={{
-            tabBarLabel: 'Order',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <SimpleLineIcons name="note" size={30} color="#69c3e0" />;
-            },
-          }}
-        /> */}
-        {/* <TabMenu.Screen
+        />
+        <TabMenu.Screen
           name="Payment"
-          component={PaymentStackScreen}
+          component={CashierPaymentStackScreen}
           options={{
             tabBarLabel: 'Payment',
             tabBarIcon: ({ focused, horizontal, tintColor }) => {
               return <MaterialIcons name="payment" size={30} color="#69c3e0" />;
             },
           }}
-        /> */}
+        />
         <TabMenu.Screen
           name="Settings"
           component={SettingsStackScreen}
@@ -728,7 +706,7 @@ export class AppNavigator extends React.Component {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          {/* <Stack.Screen
+          <Stack.Screen
             name="Login"
             component={Login}
             options={{
@@ -737,7 +715,7 @@ export class AppNavigator extends React.Component {
                 height: 0,
               },
             }}
-          /> */}
+          />
           <Stack.Screen
             name="AfterLoginOfServant"
             component={
