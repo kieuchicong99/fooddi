@@ -16,11 +16,8 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntyIcon from 'react-native-vector-icons/Entypo';
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
 
-import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Item from '@ant-design/react-native/lib/list/ListItem';
-import { createIconSetFromFontello } from 'react-native-vector-icons';
-import { Divider } from 'react-native-elements';
 const baseUrl = 'https://quanlynhahanguet.herokuapp.com/api';
 
 const styles = StyleSheet.create({

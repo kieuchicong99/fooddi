@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import Login from './src/screens/login/Login';
-import { View, Text, Button, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -58,8 +58,6 @@ function PaymentStackScreen() {
   );
 }
 
-
-
 const UserStack = createStackNavigator();
 function UserStackScreen() {
   return (
@@ -67,19 +65,6 @@ function UserStackScreen() {
       <UserStack.Screen
         name="User"
         component={User}
-        options={{
-          headerShown: false,
-        }}></UserStack.Screen>
-      {/* 
-      <UserStack.Screen
-        name="Food"
-        component={Food}
-        options={{
-          headerShown: false,
-        }}></UserStack.Screen> */}
-      <UserStack.Screen
-        name="Chart"
-        component={BillChart}
         options={{
           headerShown: false,
         }}></UserStack.Screen>
@@ -97,13 +82,6 @@ function FoodStackScreen() {
         options={{
           headerShown: false,
         }}></FoodStack.Screen>
-
-      {/* <FoodStack.Screen
-        name="FoodGroup"
-        component={}
-        options={{
-          headerShown: false,
-        }}></FoodStack.Screen> */}
     </FoodStack.Navigator>
   );
 }
@@ -187,90 +165,6 @@ function SettingsStackScreen() {
       />
     </SettingsStack.Navigator>
   );
-}
-class AfterLogin extends React.Component {
-  render() {
-    return (
-      <TabMenu.Navigator>
-        <TabMenu.Screen
-          name="Home"
-          component={HomeStackScreen}
-          options={{
-            tabBarLabel: 'Home',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <Icon name="home" size={30} color="#69c3e0" />;
-            },
-          }}
-        />
-        <TabMenu.Screen
-          name="Food"
-          component={ListFoods}
-          options={{
-            tabBarLabel: 'Food',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return (
-                <MaterialCommunityIcons name="food" size={30} color="#69c3e0" />
-              );
-            },
-          }}
-        />
-        <TabMenu.Screen
-          name="OrderFood"
-          component={OrderStackScreen}
-          options={{
-            tabBarLabel: 'Order',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <SimpleLineIcons name="note" size={30} color="#69c3e0" />;
-            },
-          }}
-        />
-        <TabMenu.Screen
-          name="Payment"
-          component={PaymentStackScreen}
-          options={{
-            tabBarLabel: 'Payment',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <MaterialIcons name="payment" size={30} color="#69c3e0" />;
-            },
-          }}
-        />
-        <TabMenu.Screen
-          name="Settings"
-          component={SettingsStackScreen}
-          options={{
-            tabBarLabel: 'Setting',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <Icon name="setting" size={30} color="#69c3e0" />;
-            },
-          }}
-        />
-
-        <TabMenu.Screen
-          name="UserManage"
-          component={UserStackScreen}
-          options={{
-            tabBarLabel: 'UserManage',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <Icon name="addusergroup" size={30} color="#69c3e0" />;
-            },
-          }}
-        />
-
-        <TabMenu.Screen
-          name="ChefManage"
-          component={ChefStackScreen}
-          options={{
-            tabBarLabel: 'ChefManage',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <Icon name="carryout" size={30} color="#69c3e0" />;
-            },
-          }}
-        />
-
-
-      </TabMenu.Navigator>
-    );
-  }
 }
 function StaffPaymentStackScreen() {
   return (
@@ -375,8 +269,6 @@ function DeliveryStackScreen() {
     </HomeStack.Navigator>
   );
 }
-
-
 
 class AfterLoginOfServant extends React.Component {
   render() {
@@ -497,8 +389,6 @@ class AfterLoginOfChef extends React.Component {
             },
           }}
         />
-
-
       </TabMenu.Navigator>
     );
   }
@@ -697,11 +587,6 @@ export class AppNavigator extends React.Component {
     })
   }
   render() {
-    // 1: quan ly
-    // 2: dau bep 
-    // 3: thu ngan
-    // 4: phuc vu
-
     const { office } = this.state.user
     return (
       <NavigationContainer>
@@ -770,8 +655,6 @@ export class AppNavigator extends React.Component {
               headerShown: false,
             }}
           />
-
-
         </Stack.Navigator>
       </NavigationContainer>
     );
