@@ -20,44 +20,17 @@ import User from './src/screens/manager/User';
 import Profile from './src/screens/login/Profile'
 import ProfileDetail from './src/screens/login/ProfileDetail'
 import Delivery from './src/screens/staff/Delivery';
-import ListPayment from './src/screens/cashier/ListPayment';
+import ListPayment from './src/screens/manager/ListPayment';
+import StaffListPayment from './src/screens/staff/ListPayment';
 import Storage from './src/utils/storage'
 import Food from './src/screens/manager/Food';
 import BillChart from './src/screens/manager/BillChart';
 import MoneyChart from './src/screens/manager/MoneyChart';
 import ManagerDashboard from './src/screens/manager/ManagerDashboard';
-// import Chart from './src/screens/manager/Chart';
+import StaffDashboard from './src/screens/staff/StaffDashboard';
 export const Stack = createStackNavigator();
 const TabMenu = createBottomTabNavigator();
 
-function DetailsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Details!</Text>
-    </View>
-  );
-}
-
-function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home screen</Text>
-      <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate('Details')}
-      />
-    </View>
-  );
-}
-
-function SettingsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings screen ckc 12334567</Text>
-      <Button title="Logout" onPress={() => navigation.navigate('Login')} />
-    </View>
-  );
-}
 
 const HomeStack = createStackNavigator();
 const PaymentStack = createStackNavigator();
@@ -82,33 +55,7 @@ function PaymentStackScreen() {
   );
 }
 
-const OrderStack = createStackNavigator();
-function OrderStackScreen() {
-  return (
-    <OrderStack.Navigator>
-      <OrderStack.Screen
-        name="CreateBill"
-        component={CreateBill}
-        options={{
-          headerShown: true,
-        }}></OrderStack.Screen>
 
-      <OrderStack.Screen
-        name="ChooseTable"
-        component={ChooseTable}
-        options={{
-          headerShown: true,
-        }}>
-      </OrderStack.Screen>
-      <OrderStack.Screen
-        name="OrderFood"
-        component={OrderFood}
-        options={{
-          headerShown: true,
-        }}></OrderStack.Screen>
-    </OrderStack.Navigator>
-  );
-}
 
 const UserStack = createStackNavigator();
 function UserStackScreen() {
@@ -345,35 +292,129 @@ class AfterLogin extends React.Component {
     );
   }
 }
+function StaffPaymentStackScreen() {
+  return (
+    <PaymentStack.Navigator>
+      <PaymentStack.Screen
+        name="ListPayment"
+        component={StaffListPayment}
+        options={{
+          headerShown: false,
+        }}>
+      </PaymentStack.Screen>
+      <PaymentStack.Screen
+        name="PaymentDetail"
+        component={Payment}
+        options={{
+          headerShown: true,
+        }}>
+      </PaymentStack.Screen>
+      <PaymentStack.Screen
+        name="OrderFood"
+        component={OrderFood}
+        options={{
+          headerShown: true,
+        }}>
+      </PaymentStack.Screen>
+    </PaymentStack.Navigator>
+  );
+}
+
+const OrderStack = createStackNavigator();
+function OrderStackScreen() {
+  return (
+    <OrderStack.Navigator>
+      <OrderStack.Screen
+        name="CreateBill"
+        component={CreateBill}
+        options={{
+          headerShown: true,
+        }}></OrderStack.Screen>
+
+      <OrderStack.Screen
+        name="ChooseTable"
+        component={ChooseTable}
+        options={{
+          headerShown: true,
+        }}>
+      </OrderStack.Screen>
+      <OrderStack.Screen
+        name="OrderFood"
+        component={OrderFood}
+        options={{
+          headerShown: true,
+        }}></OrderStack.Screen>
+
+      <OrderStack.Screen
+        name="Delivery"
+        component={Delivery}
+        options={{
+          headerShown: true,
+        }}></OrderStack.Screen>
+
+    </OrderStack.Navigator>
+  );
+}
+function StaffHomeStackScreen() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen
+        name="StaffDashboard"
+        component={StaffDashboard}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <HomeStack.Screen
+        name="OrderStackScreen"
+        component={OrderStackScreen}
+        options={{
+          headerShown: false,
+        }}></HomeStack.Screen>
+
+      <HomeStack.Screen
+        name="Delivery"
+        component={Delivery}
+        options={{
+          headerShown: true,
+        }}></HomeStack.Screen>
+    </HomeStack.Navigator>
+  );
+}
+
+function DeliveryStackScreen() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen
+        name="Delivery"
+        component={Delivery}
+        options={{
+          headerShown: true,
+        }}
+      />
+    </HomeStack.Navigator>
+  );
+}
+
+
 
 class AfterLoginOfServant extends React.Component {
   render() {
     return (
       <TabMenu.Navigator>
-        {/* <TabMenu.Screen
+        <TabMenu.Screen
           name="Home"
-          component={HomeStackScreen}
+          component={StaffHomeStackScreen}
           options={{
             tabBarLabel: 'Home',
             tabBarIcon: ({ focused, horizontal, tintColor }) => {
               return <Icon name="home" size={30} color="#69c3e0" />;
             },
           }}
-        /> */}
-        {/* <TabMenu.Screen
-          name="Food"
-          component={ListFoods}
-          options={{
-            tabBarLabel: 'Food',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return (
-                <MaterialCommunityIcons name="food" size={30} color="#69c3e0" />
-              );
-            },
-          }}
-        /> */}
+        />
+
         <TabMenu.Screen
-          name="OrderFood"
+          name="OrderStackScreen"
           component={OrderStackScreen}
           options={{
             tabBarLabel: 'Order',
@@ -382,16 +423,27 @@ class AfterLoginOfServant extends React.Component {
             },
           }}
         />
-        {/* <TabMenu.Screen
-          name="Payment"
-          component={PaymentStackScreen}
+        <TabMenu.Screen
+          name="ListBill"
+          component={StaffPaymentStackScreen}
           options={{
-            tabBarLabel: 'Payment',
+            tabBarLabel: 'ListBill',
             tabBarIcon: ({ focused, horizontal, tintColor }) => {
               return <MaterialIcons name="payment" size={30} color="#69c3e0" />;
             },
           }}
-        /> */}
+        />
+
+        <TabMenu.Screen
+          name="Delivery"
+          component={DeliveryStackScreen}
+          options={{
+            tabBarLabel: 'Delivery',
+            tabBarIcon: ({ focused, horizontal, tintColor }) => {
+              return <Icon name="swap" size={30} color="#69c3e0" />;
+            },
+          }}
+        />
         <TabMenu.Screen
           name="Settings"
           component={SettingsStackScreen}
@@ -402,29 +454,6 @@ class AfterLoginOfServant extends React.Component {
             },
           }}
         />
-
-        {/* <TabMenu.Screen
-          name="UserManage"
-          component={UserStackScreen}
-          options={{
-            tabBarLabel: 'UserManage',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <Icon name="addusergroup" size={30} color="#69c3e0" />;
-            },
-          }}
-        /> */}
-
-        {/* <TabMenu.Screen
-          name="ChefManage"
-          component={ChefStackScreen}
-          options={{
-            tabBarLabel: 'ChefManage',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <Icon name="carryout" size={30} color="#69c3e0" />;
-            },
-          }}
-        /> */}
-
 
       </TabMenu.Navigator>
     );
@@ -573,29 +602,6 @@ class AfterLoginOfCashier extends React.Component {
           }}
         />
 
-        {/* <TabMenu.Screen
-          name="UserManage"
-          component={UserStackScreen}
-          options={{
-            tabBarLabel: 'UserManage',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <Icon name="addusergroup" size={30} color="#69c3e0" />;
-            },
-          }}
-        /> */}
-
-        <TabMenu.Screen
-          name="ChefManage"
-          component={ChefStackScreen}
-          options={{
-            tabBarLabel: 'ChefManage',
-            tabBarIcon: ({ focused, horizontal, tintColor }) => {
-              return <Icon name="carryout" size={30} color="#69c3e0" />;
-            },
-          }}
-        />
-
-
       </TabMenu.Navigator>
     );
   }
@@ -708,7 +714,7 @@ export class AppNavigator extends React.Component {
   }
   async componentDidMount() {
     await Storage.getItem('user').then(res => {
-      // console.log('Profile:', res.full_name)
+      console.log('Profile:', res.full_name)
       this.setState({ user: res || {} })
     })
   }
@@ -732,11 +738,10 @@ export class AppNavigator extends React.Component {
               },
             }}
           /> */}
-          {/* <Stack.Screen
-            name="AfterLogin"
+          <Stack.Screen
+            name="AfterLoginOfServant"
             component={
-              office === 4 ? AfterLoginOfServant : office === 3 ? AfterLoginOfChef : office === 2 ? AfterLoginOfCashier : office === 1 ? AfterLoginOfManager :
-                Login
+              AfterLoginOfServant
             }
             options={{
               title: null,
@@ -745,8 +750,7 @@ export class AppNavigator extends React.Component {
               },
               headerShown: false,
             }}
-          /> */}
-
+          />
           <Stack.Screen
             name="AfterLoginOfManager"
             component={
@@ -789,19 +793,7 @@ export class AppNavigator extends React.Component {
             }}
           />
 
-          <Stack.Screen
-            name="AfterLoginOfServant"
-            component={
-              AfterLoginOfServant
-            }
-            options={{
-              title: null,
-              headerStyle: {
-                height: 0,
-              },
-              headerShown: false,
-            }}
-          />
+
         </Stack.Navigator>
       </NavigationContainer>
     );

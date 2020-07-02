@@ -17,7 +17,7 @@ import Colors from '../../utils/Colors';
 const Item = List.Item;
 
 
-class ListPayment extends Component {
+class StaffListPayment extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -79,13 +79,13 @@ class ListPayment extends Component {
             <TouchableOpacity
               style={{ width: 30, height: 30 }}
               onPress={() => {
-                this.props.navigation.navigate('ManagerDashboard')
+                this.props.navigation.navigate('StaffDashboard')
               }}>
               <AntIcon name="left" size={25} color={Colors.blackMain} />
             </TouchableOpacity>
           </View>
           <View style={{ fontSize: 18, width: screenWidth - 30, alignItems: 'center' }}>
-            <Text style={{ fontSize: 18, }}>Danh sách đơn</Text>
+            <Text style={{ fontSize: 18, }}>Danh sách đơn chưa thanh toán</Text>
           </View>
 
         </View>
@@ -97,28 +97,33 @@ class ListPayment extends Component {
                 {'Bàn'}
               </Text>
             </View>
-            <View style={{ width: '15%', alignItems: 'flex-start', marginLeft: -10 }}>
+            <View style={{ width: '12%', alignItems: 'flex-start', marginLeft: -10 }}>
               <Text>
                 {'Số tiền'}
               </Text>
             </View>
 
-            <View style={{ width: '25%', alignItems: 'flex-start', marginLeft: 13 }}>
+            <View style={{ width: '22%', alignItems: 'flex-start', marginLeft: 13 }}>
               <Text>
                 {'Tên KH'}
               </Text>
             </View>
-            <View style={{ width: '10%', alignItems: 'flex-start', }}>
+            <View style={{ width: '12%', alignItems: 'flex-start', }}>
               <Text>
                 {'Status'}
               </Text>
             </View>
-            <View style={{ width: '15%', alignItems: 'center', marginLeft: 5 }}>
+            <View style={{ width: '12%', alignItems: 'center', marginLeft: -5 }}>
               <Text>
                 {'Chi tiết'}
               </Text>
             </View>
-            <View style={{ width: '15%', alignItems: 'flex-end', marginLeft: -10 }}>
+            <View style={{ width: '15%', alignItems: 'flex-end', marginLeft: -15 }}>
+              <Text>
+                {'Thêm'}
+              </Text>
+            </View>
+            <View style={{ width: '14%', alignItems: 'flex-end', marginLeft: -10 }}>
               <Text>
                 {'Submit'}
               </Text>
@@ -136,11 +141,16 @@ class ListPayment extends Component {
               style={{ marginTop: 15, }}
             >
               {
-                (this.state.listBill?.length > 0) ? this.state.listBill.map((item) => {
+                (this.state.listBill?.length > 0) ? this.state.listBill.map((item, index) => {
                   // console.log('item:', item)
                   return (
-                    <Item style={{ width: screenWidth, }}>
-                      <View style={{ flexDirection: 'row', width: screenWidth }}>
+                    <Item style={{ width: screenWidth, display: item.status === 'OR' ? 'flex' : 'none' }}>
+                      <View style={{
+                        flexDirection: 'row', width: screenWidth
+
+                      }}
+                        key={index}
+                      >
                         <View style={{ width: '10%' }} >
                           <Text numberOfLines={1} >
                             {item.table.name}
@@ -152,7 +162,7 @@ class ListPayment extends Component {
                             {item.total} k
                           </Text>
                         </View>
-                        <View style={{ width: '30%', alignItems: 'center' }}>
+                        <View style={{ width: '25%', alignItems: 'center' }}>
 
 
                           <Text numberOfLines={1}>
@@ -167,7 +177,7 @@ class ListPayment extends Component {
                             {item.status}
                           </Text>
                         </View>
-                        <View style={{ width: '15%', alignItems: 'center', marginLeft: 10 }}>
+                        <View style={{ width: '10%', alignItems: 'center', marginLeft: 10 }}>
                           <TouchableOpacity onPress={() => {
                             console.log('item', item)
                             this.props.navigation.navigate('PaymentDetail', { bill_id: item.id, customer: item.customer.full_name })
@@ -176,6 +186,19 @@ class ListPayment extends Component {
                           >
                             <Text style={{ fontSize: 12, textDecorationLine: 'underline', color: Colors.blueMain }}>
                               {'Chi tiết'}
+                            </Text>
+                          </TouchableOpacity>
+
+                        </View>
+                        <View style={{ width: '10%', alignItems: 'center', marginLeft: 10 }}>
+                          <TouchableOpacity onPress={() => {
+                            console.log('item', item)
+                            this.props.navigation.navigate('OrderFood', { bill: item, customer: item.customer })
+                          }}
+                            style={{}}
+                          >
+                            <Text style={{ fontSize: 12, textDecorationLine: 'underline', color: '#35b043' }}>
+                              {'Thêm'}
                             </Text>
                           </TouchableOpacity>
 
@@ -236,7 +259,7 @@ class ListPayment extends Component {
         </View >
         <Modal
           style={{ width: '65%', height: '15%', minHeight: 120 }}
-          title={<Text style={{ textAlign: 'center', fontSize: 18, marginTop: -10, color: Colors.blackMain }}>Xác nhận thanh toán</Text>}
+          title={<Text style={{ textAlign: 'center', fontSize: 18, marginTop: -10, color: Colors.blackMain }}>Gửi yêu cầu thanh toán</Text>}
           transparent
           onClose={
             () => {
@@ -247,7 +270,7 @@ class ListPayment extends Component {
           visible={this.state.openModal}
           closable
         >
-          <ButtonCustom type='first' title='Thanh toán' buttonStyle={{ minHeight: 35, marginTop: 10, borderRadius: 10 }}
+          <ButtonCustom type='first' title='Gửi' buttonStyle={{ minHeight: 35, marginTop: 10, borderRadius: 10 }}
             onPress={() => {
               let payload = {
                 data: {
@@ -267,4 +290,4 @@ class ListPayment extends Component {
   }
 }
 
-export default ListPayment;
+export default StaffListPayment;

@@ -13,8 +13,9 @@ const Item = List.Item;
 const styles = StyleSheet.create({
 
 });
-
-
+import { Dimensions } from "react-native";
+const screenWidth = Dimensions.get("window").width;
+import Colors from '../../utils/Colors'
 
 class Delivery extends Component {
   constructor(props) {
@@ -25,7 +26,8 @@ class Delivery extends Component {
       food: '',
       amount: '',
       id: '',
-      client: new WebSocket('ws://45.32.23.158:8000/ws/chat/delivery/')
+      client: new WebSocket('ws://45.32.23.158:8000/ws/chat/delivery/'),
+      user: {}
     };
 
     this.onClose = () => {
@@ -64,10 +66,12 @@ class Delivery extends Component {
     title: 'hello'
   }
 
-  componentDidMount() {
-
+  async componentDidMount() {
+    await Storage.getItem('user').then(res => {
+      // console.log('Profile:', res.full_name)
+      this.setState({ user: res || {} })
+    })
   }
-
   onSubmit = () => {
     this.setState({ openModal: true })
   };
@@ -82,12 +86,12 @@ class Delivery extends Component {
           >
             <Item style={{ width: '100%' }} >
               <View style={{ flexDirection: 'row', width: '100%' }}>
-                <View style={{ width: '10%' }}>
+                <View style={{ width: '15%' }}>
                   <Text>
                     {'Bàn'}
                   </Text>
                 </View>
-                <View style={{ width: '15%', alignItems: 'flex-start' }}>
+                <View style={{ width: '25%', alignItems: 'center' }}>
                   <Text>
                     {'Món ăn'}
                   </Text>
@@ -132,18 +136,18 @@ class Delivery extends Component {
                           </Text>
                         </View>
 
-                        <View style={{ width: '15%', alignItems: 'center' }}>
-                          <Text>
+                        <View style={{ width: '25%', alignItems: 'flex-start' }}>
+                          <Text numberOfLines={1}>
                             {item.food}
                           </Text>
                         </View>
-                        <View style={{ width: '15%', alignItems: 'center' }}>
+                        <View style={{ width: '10%', alignItems: 'center' }}>
                           <Text>
                             {item.amount}
                           </Text>
                         </View>
-                        <View style={{ width: '15%', alignItems: 'center' }}>
-                          <Text>
+                        <View style={{ width: '20%', alignItems: 'flex-start', marginLeft: 15 }}>
+                          <Text style={{ paddingHorizontal: 5, fontSize: 12, color: Colors.white, borderRadius: 10, backgroundColor: !item.status ? Colors.greenMain : Colors.redMain }}>
                             {item.status === false ? 'Đã giao' : 'Chưa giao'}
                           </Text>
                         </View>
@@ -153,7 +157,7 @@ class Delivery extends Component {
                           </Text>
                         </View>
                         {item.delivery_by === '' ?
-                          <View style={{ width: '15%', justifyContent: 'center', alignItems: 'flex-end' }}>
+                          <View style={{ width: '15%', justifyContent: 'center', alignItems: 'center' }}>
                             <Button
                               buttonStyle={{ width: 20, height: 20, backgroundColor: '#ffffff', borderRadius: 15, padding: 0 }}
                               icon={
@@ -201,8 +205,8 @@ class Delivery extends Component {
 
         >
           <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', marginVertical: 15 }}>
-            <View style={{ flexDirection: 'row', paddingVertical: 15, marginTop: 15 }}>
-              <View style={{ width: '30%', alignItems: 'flex-start' }}>
+            <View style={{ flexDirection: 'row', paddingVertical: 15, marginTop: 15, width: screenWidth }}>
+              <View style={{ width: '15%', alignItems: 'flex-start' }}>
                 <Text style={{ fontSize: 16 }}>
                   {this.state.table}
                 </Text>
@@ -225,7 +229,7 @@ class Delivery extends Component {
                   let payload = {
                     data: {
                       id: this.state.id,
-                      delivery_by: 'CONG'
+                      delivery_by: this.state.user.full_name
                     }
                   }
 

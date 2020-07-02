@@ -37,7 +37,7 @@ const headerCategory = (type, props) => {
                 onPress={() => {
                   console.log('helo');
                   console.log('props:', props);
-                  props.navigation.navigate('ListCategory');
+                  props.navigation.navigate('CreateBill');
                 }}>
                 <AntDesignIcon name="left" size={25} color={Colors.white} />
               </TouchableOpacity>
@@ -48,7 +48,7 @@ const headerCategory = (type, props) => {
                 onPress={() => {
                   console.log('helo');
                   console.log('props:', props);
-                  props.navigation.navigate('ListCategory');
+                  props.navigation.navigate('CreateBill');
                 }}>
                 <Text
                   style={{
@@ -92,7 +92,7 @@ const headerCategory = (type, props) => {
               onPress={() => {
                 console.log('helo');
                 console.log('props:', props);
-                props.navigation.navigate('ListCategory');
+                props.navigation.navigate('CreateBill');
               }}>
               <AntDesignIcon name="left" size={25} color={Colors.blackMain} />
             </TouchableOpacity>
@@ -103,7 +103,7 @@ const headerCategory = (type, props) => {
               onPress={() => {
                 console.log('helo');
                 console.log('props:', props);
-                props.navigation.navigate('ListCategory');
+                props.navigation.navigate('CreateBill');
               }}>
               <Text
                 style={{
