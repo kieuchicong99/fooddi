@@ -22,7 +22,7 @@
     "appcenter": "3.0.0",
     "appcenter-analytics": "3.0.0",
     "appcenter-crashes": "3.0.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "immer": "^5.3.6",
     "moment": "^2.27.0",
     "prettier": "^1.19.1",
